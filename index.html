@@ -1,695 +1,772 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>سحاب الويب الذكي</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@700;800;900&family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta charset="UTF-8">
+    <meta http-equiv=X-UA-Compatible content="IE=edge">
+    <title>InShare</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
 
-<style>
-:root{
-  --bg-main:#05070d;
-  --glass-bg:rgba(14,20,34,0.62);
-  --glass-bg-solid:rgba(11,16,28,0.92);
-  --glass-border:rgba(0,229,255,0.14);
-  --neon-cyan:#00e5ff;
-  --neon-purple:#a855f7;
-  --grad:linear-gradient(135deg,var(--neon-purple),var(--neon-cyan));
-  --text-active:#f4f7fb;
-  --text-dim:#8892a6;
-  --danger:#f87171;
-  --success:#34d399;
-  --r-xl:24px;
-  --r-md:16px;
-  --r-sm:12px;
-  --ease:cubic-bezier(.4,0,.2,1);
-}
-*{box-sizing:border-box;margin:0;padding:0;font-family:'Tajawal',sans-serif;-webkit-tap-highlight-color:transparent;}
-h1,h2,.brand-title,.step-title{font-family:'Cairo',sans-serif;}
-body{
-  background:var(--bg-main);color:var(--text-active);min-height:100vh;
-  display:flex;flex-direction:column;padding:14px;position:relative;overflow-x:hidden;
-}
-body::before{
-  content:'';position:fixed;inset:-20%;z-index:-1;
-  background:
-    radial-gradient(circle at 15% 15%,rgba(168,85,247,.14) 0%,transparent 45%),
-    radial-gradient(circle at 85% 85%,rgba(0,229,255,.10) 0%,transparent 45%),
-    radial-gradient(circle at 90% 10%,rgba(168,85,247,.08) 0%,transparent 40%);
-}
-::-webkit-scrollbar{width:0;height:0;}
+        body {
+            background: linear-gradient(to left, #1b2141, #464b68);
+            padding-top: 73px;
+            padding-bottom: 73px;
+        }
 
-/* ===== Header ===== */
-header{
-  background:var(--glass-bg);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
-  border:1px solid var(--glass-border);border-radius:var(--r-xl);
-  padding:14px 16px;display:flex;align-items:center;gap:12px;margin-bottom:14px;
-  box-shadow:0 8px 32px rgba(0,0,0,.35);
-}
-.header-icon{
-  width:44px;height:44px;background:var(--grad);border-radius:14px;flex-shrink:0;
-  display:flex;align-items:center;justify-content:center;color:#020306;font-size:1.2rem;
-  box-shadow:0 0 18px rgba(0,229,255,.35);
-}
-.title-wrapper{display:flex;flex-direction:column;flex-grow:1;min-width:0;}
-.site-title{
-  font-family:'Cairo',sans-serif;font-size:1.2rem;font-weight:800;color:#fff;border:none;outline:none;
-  background:transparent;width:100%;caret-color:var(--neon-cyan);
-}
-.site-sub{font-size:.72rem;color:var(--text-dim);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.gear-btn{
-  width:40px;height:40px;flex-shrink:0;border-radius:12px;border:1px solid var(--glass-border);
-  background:rgba(255,255,255,.03);color:var(--text-dim);display:flex;align-items:center;justify-content:center;
-  font-size:1.05rem;cursor:pointer;transition:var(--ease) .25s;position:relative;
-}
-.gear-btn:active{transform:scale(.9) rotate(45deg);}
-.gear-btn.no-token::after{
-  content:'';position:absolute;top:6px;left:6px;width:8px;height:8px;border-radius:50%;
-  background:var(--danger);box-shadow:0 0 8px var(--danger);
-}
-.gear-btn.has-token{color:var(--neon-cyan);border-color:rgba(0,229,255,.3);}
+    </style>
+    <script type="text/javascript">
+        class ItemInfo {
+            constructor(isSend,id, file, status, ajaxObj, coverID, sizeID, progressId, percentId, compId,cloundId, totalSize, currentSize) {
+                this.isSend=isSend;
+                this.id = id;
+                this.file = file;
+                this.status = status;
+                this.ajaxObj = ajaxObj;
+                this.coverID = coverID;
+                this.sizeID = sizeID;
+                this.progressId = progressId;
+                this.percentId = percentId;
+                this.compId = compId;
+                this.cloudId=cloundId;
+                this.totalSize = totalSize;
+                this.currentSize = currentSize;
+            }
+        }
 
-/* ===== Tabs ===== */
-.phone-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px;}
-.phone-tab-btn{
-  background:var(--glass-bg);border:1px solid rgba(255,255,255,.04);padding:12px 6px;border-radius:var(--r-md);
-  color:var(--text-dim);font-size:.82rem;font-weight:700;cursor:pointer;display:flex;flex-direction:column;
-  align-items:center;gap:6px;transition:var(--ease) .25s;backdrop-filter:blur(10px);
-}
-.phone-tab-btn i{font-size:1.05rem;}
-.phone-tab-btn.active{
-  background:linear-gradient(135deg,rgba(168,85,247,.16),rgba(0,229,255,.16));
-  border-color:var(--neon-cyan);color:var(--neon-cyan);box-shadow:0 4px 16px rgba(0,229,255,.12);
-  transform:scale(.97);
-}
+        class MyFile {
+            constructor(size, name, id, g_id, type) {
+                this.size = size;
+                this.name = name;
+                this.id = id;
+                this.g_id = g_id;
+                this.type = type;
+            }
+        }
 
-/* ===== Main card ===== */
-.main-card{
-  background:var(--glass-bg);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
-  border:1px solid var(--glass-border);border-radius:var(--r-xl);padding:22px 15px;
-  box-shadow:0 14px 44px rgba(0,0,0,.45);flex-grow:1;display:flex;flex-direction:column;
-}
-.content-section{display:none;}
-.content-section.active-section{display:block;animation:slideUp .3s var(--ease) forwards;}
-@keyframes slideUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+        let sendItemInfo = [];
+        let recItemInfo = [];
+        let baseUrl = "http://"+document.domain+":"+window.location.port;
+        let currentTab = "send";
 
-.section-title{font-size:.92rem;font-weight:700;color:#a5f3fc;margin-bottom:10px;display:flex;align-items:center;gap:6px;}
+        function getEmptyView() {
+            return "<div id='empty' style='margin-top: 133px'>" +
+                        "<div style='margin: 0 auto;width: fit-content;height: 120px;text-align: center'>" +
+                            "<div>" +
+                                "<img src='common/empty' id='empty_img'>" +
+                            "</div>" +
+                            "<label style='color: #8287a4;font-size: 28px;text-align: center'>_empty_la_</label>" +
+                        "</div>"+
+                    "</div>";
+        }
 
-.phone-textarea-wrapper{border:1px solid rgba(255,255,255,.08);border-radius:var(--r-md);overflow:hidden;background:#080b13;}
-.phone-textarea{
-  width:100%;height:170px;background:transparent;border:none;outline:none;padding:14px;color:#34d399;
-  font-size:.88rem;resize:none;direction:ltr;line-height:1.55;font-family:'Courier New',monospace;
-}
+        function ajaxUpload(url, itemInfo, funcInProgress, funcSuccess, funcFail, funcAbort) {
+            let oAjax = new XMLHttpRequest();
 
-.mobile-drop-zone{
-  border:2px dashed rgba(0,229,255,.22);border-radius:var(--r-md);padding:32px 12px;text-align:center;
-  background:rgba(0,0,0,.2);cursor:pointer;transition:var(--ease) .25s;
-}
-.mobile-drop-zone.selected-zone{border-color:var(--success);background:rgba(52,211,153,.06);}
-.mobile-drop-zone:active{transform:scale(.985);}
-.mobile-drop-zone i{font-size:2.3rem;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:10px;display:inline-block;}
-.mobile-drop-zone h3{font-size:.98rem;font-weight:700;margin-bottom:4px;}
-.mobile-drop-zone p{font-size:.72rem;color:var(--text-dim);}
-.hidden-input{display:none;}
+            itemInfo.ajaxObj = oAjax;
 
-.slug-panel{margin-top:18px;background:rgba(255,255,255,.02);padding:14px;border-radius:var(--r-md);border:1px solid rgba(255,255,255,.04);}
-.slug-input-container{display:flex;flex-direction:column;gap:6px;background:#080b13;border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:10px 14px;}
-.slug-prefix{font-size:.72rem;color:var(--text-dim);direction:ltr;text-align:left;}
-.slug-field{background:transparent;border:none;outline:none;color:var(--neon-cyan);font-weight:700;font-size:.98rem;direction:ltr;width:100%;}
-.slug-field:disabled{color:var(--text-dim);}
+            let formData = new FormData();
+            formData.append("file", itemInfo.file);
+            oAjax.onreadystatechange = function () {
+                if (oAjax.readyState == 4) {
+                    if (oAjax.status == 200) {
+                        funcSuccess(itemInfo, oAjax.responseText, oAjax);
+                    } else {
+                        funcFail(itemInfo, oAjax.status, oAjax);
+                    }
+                }
+            };
+            oAjax.open("POST", url, true);
+            oAjax.upload.onprogress = function (event) {
+                onProgressChanged(itemInfo, oAjax, event.loaded, event.total);
+            };
+            oAjax.setRequestHeader("item_id", itemInfo.id);
+            oAjax.setRequestHeader("status", itemInfo.status);
+            oAjax.onerror = function () {
+                funcAbort(itemInfo, oAjax);
+            };
+            oAjax.send(formData);
+            oAjax.onabort = function () {
+                funcAbort(itemInfo, oAjax);
+            };
+            itemInfo.status = 2;
+        }
 
-.action-btn{
-  width:100%;background:var(--grad);border:none;padding:16px;border-radius:var(--r-md);color:#020406;
-  font-size:1.02rem;font-weight:800;margin-top:20px;cursor:pointer;display:flex;align-items:center;
-  justify-content:center;gap:8px;box-shadow:0 8px 22px rgba(0,229,255,.22);transition:var(--ease) .2s;
-}
-.action-btn:active{transform:scale(.97);filter:brightness(.92);}
-.action-btn:disabled{opacity:.5;filter:grayscale(.4);cursor:not-allowed;}
+        function selectFileFromPc() {
+            let input_file = document.getElementById("input_file");
+            input_file.click();
+        }
 
-/* ===== Steps (signature element) ===== */
-.steps-track{display:none;margin-top:18px;gap:8px;}
-.steps-track.visible{display:flex;}
-.step-item{
-  flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;position:relative;text-align:center;
-}
-.step-item:not(:last-child)::after{
-  content:'';position:absolute;top:15px;right:calc(50% + 22px);left:calc(-50% + 22px);height:2px;
-  background:rgba(255,255,255,.08);z-index:0;transition:background .4s var(--ease);
-}
-.step-item.done:not(:last-child)::after{background:var(--success);}
-.step-circle{
-  width:30px;height:30px;border-radius:50%;background:#0b0f18;border:2px solid rgba(255,255,255,.1);
-  display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:800;color:var(--text-dim);
-  z-index:1;transition:var(--ease) .3s;
-}
-.step-item.active .step-circle{border-color:var(--neon-cyan);color:var(--neon-cyan);box-shadow:0 0 12px rgba(0,229,255,.4);animation:pulse 1.2s infinite;}
-.step-item.done .step-circle{border-color:var(--success);background:var(--success);color:#04120c;}
-.step-item.error .step-circle{border-color:var(--danger);color:var(--danger);}
-@keyframes pulse{0%,100%{box-shadow:0 0 8px rgba(0,229,255,.35);}50%{box-shadow:0 0 18px rgba(0,229,255,.6);}}
-.step-label{font-size:.62rem;color:var(--text-dim);font-weight:700;}
-.step-item.active .step-label{color:var(--neon-cyan);}
-.step-item.done .step-label{color:var(--success);}
-.step-item.error .step-label{color:var(--danger);}
+        function getSizeStr(size) {
+            if (size < 1024) {
+                return size + "B";
+            }
+            if (size < 1024 * 1024) {
+                return (size / 1024).toFixed(2) + "KB";
+            }
+            if (size < 1024 * 1024 * 1024) {
+                return (size / 1024 / 1024).toFixed(2) + "MB";
+            }
+            return (size / 1024 / 1024 / 1024).toFixed(2) + "GB";
+        }
 
-.loader-ring{
-  display:none;width:34px;height:34px;border:3px solid rgba(0,229,255,.12);border-radius:50%;
-  border-top-color:var(--neon-cyan);animation:spin .8s linear infinite;margin:16px auto 0 auto;
-}
-@keyframes spin{to{transform:rotate(360deg);}}
+        let onProgressChanged = function (itemInfo, oAjax, progress, total) {
+            try {
+                if (itemInfo.status == -4) {
+                    oAjax.abort();
+                    return;
+                }
+                itemInfo.currentSize = progress;
+                itemInfo.totalSize = total;
+                document.getElementById(itemInfo.sizeID).innerHTML = getSizeStr(progress) + "/" + getSizeStr(total);
+                if (total != 0) {
+                    document.getElementById(itemInfo.percentId).innerHTML = (progress / total * 100).toFixed(0) + "%";
+                } else {
+                    document.getElementById(itemInfo.percentId).innerHTML = "0%";
+                }
+                let progressElement = document.getElementById(itemInfo.progressId);
+                progressElement.style.width = (progress / total*100) + "%";
+            } catch (e) {
+                console.log(e.toString());
+            }
+        };
 
-.result-panel{
-  margin-top:18px;padding:15px;background:linear-gradient(135deg,rgba(16,185,129,.09),rgba(5,150,105,.02));
-  border:1px solid rgba(16,185,129,.28);border-radius:var(--r-md);display:none;
-}
-.result-title-text{color:var(--success);font-size:.83rem;font-weight:700;margin-bottom:9px;display:flex;align-items:center;gap:6px;}
-.result-sub{font-size:.7rem;color:var(--text-dim);margin-top:8px;line-height:1.5;}
-.result-box{display:flex;background:#05070a;border:1px solid rgba(16,185,129,.22);border-radius:12px;overflow:hidden;}
-.result-url{flex-grow:1;padding:12px;color:#a7f3d0;font-size:.86rem;border:none;background:transparent;outline:none;direction:ltr;width:55%;}
-.phone-copy-btn{background:rgba(16,185,129,.16);border:none;color:var(--success);padding:0 15px;font-size:.82rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:4px;}
+        let doViewRefresh = function (itemInfo, message, oAjax) {
+            try {
+                let element = document.getElementById(itemInfo.coverID);
+                element.src = baseUrl + "/img/" + itemInfo.id;
+                document.getElementById(itemInfo.percentId).parentNode.parentNode.parentNode.remove();
+                document.getElementById(itemInfo.sizeID).parentNode.style.marginTop="2px";
+                let statusIcon = document.getElementById(itemInfo.compId);
+                if (itemInfo.status == -2||itemInfo.status == -4) {
+                    statusIcon.src = baseUrl + "/common/error";
+                }else if (itemInfo.status==-1){
+                    statusIcon.src = baseUrl +"/common/comp";
+                    if(!itemInfo.isSend){
+                        let elementById = document.getElementById(itemInfo.cloudId);
+                        elementById.style.visibility="visible";
+                        elementById.parentNode.href=baseUrl+"/get/download_url?g_id="+itemInfo.file.g_id+"&id="+itemInfo.id;
+                    }
+                }
+                statusIcon.style.visibility = "visible";
+                if (itemInfo.file.type == 1 && itemInfo.status == -1) {
+                    document.getElementById(itemInfo.sizeID).innerHTML = getSizeStr(itemInfo.file.size);
+                }
+            } catch (e) {
+                console.log(e.toString());
+            }
+        };
 
-.error-panel{
-  margin-top:18px;padding:14px 15px;background:rgba(248,113,113,.08);border:1px solid rgba(248,113,113,.3);
-  border-radius:var(--r-md);display:none;align-items:flex-start;gap:10px;
-}
-.error-panel i{color:var(--danger);font-size:1.1rem;margin-top:2px;}
-.error-title{color:var(--danger);font-weight:700;font-size:.85rem;margin-bottom:3px;}
-.error-detail{color:#fecaca;font-size:.76rem;line-height:1.5;}
+        let onFail = function (itemInfo, code, oAjax) {
+            itemInfo.status = -2;
+            try {
+                document.getElementById(itemInfo.percentId).parentNode.parentNode.parentNode.remove();
+                document.getElementById(itemInfo.sizeID).parentNode.style.marginTop="2px";
+                let elementById = document.getElementById(itemInfo.compId);
+                elementById.src = baseUrl + "/common/error";
+                elementById.style.visibility = "visible";
+                oAjax.abort();
+            } catch (e) {
+                console.log(e.toString());
+            }
+            console.log("failed!!!!!!!!!!!!!!!!!!!!!!!!");
+            console.log(code);
+        };
 
-footer{text-align:center;color:var(--text-dim);font-size:.72rem;padding-top:16px;}
+        function sendCancelItem(item) {
+            let request = new XMLHttpRequest();
+            request.open("GET", baseUrl + "/cancel_item", true);
+            request.onreadystatechange = function () {
+                if (request.readyState == 4) {
+                    if (request.status == 200) {
+                        console.log("cancel ok ");
+                    } else {
+                        console.log("cancel error");
+                    }
+                }
+            };
+            request.setRequestHeader("item_id", item.id);
+            if (item.file.g_id != null && item.file.g_id != undefined) {
+                request.setRequestHeader("g_id", item.file.g_id);
+            }
+            request.send(null);
+        }
 
-/* ===== Settings Modal ===== */
-.modal-overlay{
-  position:fixed;inset:0;background:rgba(2,3,7,.75);backdrop-filter:blur(6px);
-  display:none;align-items:flex-end;justify-content:center;z-index:100;
-}
-.modal-overlay.open{display:flex;animation:fadeIn .25s var(--ease);}
-@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
-.modal-sheet{
-  width:100%;max-width:480px;background:var(--glass-bg-solid);border:1px solid var(--glass-border);
-  border-bottom:none;border-radius:26px 26px 0 0;padding:22px 18px 26px;
-  box-shadow:0 -10px 40px rgba(0,0,0,.5);animation:sheetUp .3s var(--ease);
-}
-@keyframes sheetUp{from{transform:translateY(30px);opacity:0;}to{transform:translateY(0);opacity:1;}}
-.modal-handle{width:40px;height:4px;background:rgba(255,255,255,.15);border-radius:4px;margin:0 auto 16px;}
-.modal-title{font-family:'Cairo',sans-serif;font-size:1.05rem;font-weight:800;display:flex;align-items:center;gap:8px;margin-bottom:6px;}
-.modal-desc{font-size:.78rem;color:var(--text-dim);line-height:1.6;margin-bottom:16px;}
-.token-input-wrap{display:flex;align-items:center;background:#080b13;border:1px solid rgba(255,255,255,.08);border-radius:var(--r-sm);padding:4px 4px 4px 14px;margin-bottom:10px;}
-.token-input{
-  flex-grow:1;background:transparent;border:none;outline:none;color:var(--neon-cyan);font-size:.88rem;
-  padding:10px 0;direction:ltr;text-align:left;font-family:'Courier New',monospace;
-}
-.eye-btn{background:none;border:none;color:var(--text-dim);padding:10px 12px;cursor:pointer;font-size:.95rem;}
-.modal-note{font-size:.68rem;color:var(--text-dim);background:rgba(0,229,255,.05);border:1px solid rgba(0,229,255,.12);padding:9px 11px;border-radius:10px;line-height:1.6;margin-bottom:16px;display:flex;gap:7px;}
-.modal-note i{color:var(--neon-cyan);margin-top:1px;}
-.modal-actions{display:flex;gap:10px;}
-.modal-btn{flex:1;padding:13px;border-radius:var(--r-md);border:none;font-weight:800;font-size:.88rem;cursor:pointer;transition:var(--ease) .2s;}
-.modal-btn:active{transform:scale(.96);}
-.modal-btn.save{background:var(--grad);color:#020406;}
-.modal-btn.clear{background:rgba(248,113,113,.12);color:var(--danger);border:1px solid rgba(248,113,113,.25);}
-.modal-close-x{position:absolute;top:18px;left:16px;background:none;border:none;color:var(--text-dim);font-size:1.1rem;cursor:pointer;}
-.modal-sheet{position:relative;}
-.token-status{font-size:.72rem;margin-top:-4px;margin-bottom:14px;display:flex;align-items:center;gap:6px;}
-.token-status.ok{color:var(--success);}
-.token-status.missing{color:var(--danger);}
-</style>
+        function cancelUpload(data) {
+            let element = document.getElementById(data.id);
+            element.parentNode.parentNode.parentNode.parentNode.remove();
+            let container = document.getElementById("container");
+            if (container.childElementCount == 0) {
+                container.innerHTML = getEmptyView();
+            }
+            for (let i = 0; i < sendItemInfo.length; i++) {
+                let id = sendItemInfo[i].id;
+                if (data.id == id) {
+                    try {
+                        sendItemInfo[i].ajaxObj.abort();
+                    } catch (e) {
+                        sendCancelItem(sendItemInfo[i]);
+                    }
+                    sendItemInfo[i].status = -4;
+                    sendItemInfo.splice(i, 1);
+                    break;
+                }
+            }
+            for (let i = 0; i < recItemInfo.length; i++) {
+                let recId = recItemInfo[i].id;
+                if (data.id == recId) {
+                    try {
+                        recItemInfo[i].ajaxObj.abort();
+                    } catch (e) {
+                        sendCancelItem(recItemInfo[i]);
+                    }
+                    recItemInfo[i].status = -4;
+                    recItemInfo.splice(i, 1);
+                    break;
+                }
+            }
+        }
+
+        function getRandomId() {
+            return Math.random().toString(33);
+        }
+
+        function generateChildItemView(itemInfo) {
+            let file = itemInfo.file;
+            return "<div style='padding-top:10px;padding-bottom:10px;display: flex;width: 100%'>" +
+                        "<div style='width: 70px;height: 70px;margin-left: 20px'>" +
+                            "<img src='" + baseUrl + "/img/cover' width='70px' height='70px' id='" + itemInfo.coverID + "'>" +
+                        "</div>" +
+                        "<div style='width: 100%;margin-left: 31px;margin-right: 24px'>" +
+                            "<div style='margin-top: 0;width: 100%'>" +
+                                "<p style='width:100%;max-width:300px;display: block;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;margin-bottom:3px;font-size: 24px;color: #fff'>" + file.name + "</p>" +
+                                "<div style='display: flex;width: 100%'>" +
+                                    "<label id='" + itemInfo.sizeID + "' style='color: #A8BBCA;font-size: 18px;width: 100%'>" + file.size + "</label>" +
+                                    "<a>" +
+                                        "<img src='common/cloud' height='20' width='20' style='float:right;margin-right:16px;visibility: hidden' id='" + itemInfo.cloudId + "'>" +
+                                    "</a>"+
+                                    "<img src='common/comp' height='20' width='20' style='visibility: hidden' id='" + itemInfo.compId + "'>" +
+                                "</div>"+
+                            "</div>" +
+                            "<div style='display: flex;width: 100%'>" +
+                                "<div style='width: 100%'>" +
+                                    "<div style='width: 70%;margin-top: 1px;display: flex'>" +
+                                        "<div style='background: #d9d8d8;width: 100%;height: 6px;margin-top: 5px'>" +
+                                            "<div style='height: 6px;width:0px;background: #0BBF4B' id='" + itemInfo.progressId + "'>" + "</div>" +
+                                        "</div>" +
+                                        "<label id='" + itemInfo.percentId + "' style='margin-left: 20px;margin-top: -3px;color: white'></label>" +
+                                    "</div>" +
+                                "</div>"+
+                                "<div><img src='common/download' id='" + itemInfo.id + "' onclick='cancelUpload(this)' width='20px;' height='20px' style='margin-left: 10px'>" + "</div>" +
+                            "</div>" +
+                        "</div>" +
+                "</div>";
+        }
+
+        function onDropFinished(event) {
+            event.stopPropagation();
+            event.preventDefault();
+            let selectFile = document.getElementById("select_file");
+            selectFile.style.background="rgba(249,249,249,0.1)";
+            let length = event.dataTransfer.files.length;
+            uploadFiles(event.dataTransfer.files);
+        }
+
+        function ondragOverTop(event) {
+            event.stopPropagation();
+            event.preventDefault();
+            event.dataTransfer.dropEffect='copy';
+        }
+
+        function onDragEnterZone(event) {
+            let selectFile = document.getElementById("select_file");
+            selectFile.style.background="rgba(249,249,249,0.5)";
+        }
+
+        function onDragExitZone(event) {
+            let selectFile = document.getElementById("select_file");
+            selectFile.style.background="rgba(249,249,249,0.1)";
+        }
+
+        function uploadFiles(files) {
+            let mContainer = document.getElementById("container");
+            if (sendItemInfo.length == 0 && currentTab == "send") {
+                mContainer.innerHTML = getEmptyView();
+            }
+            let tempList = [];
+            for (let i = 0; i < files.length; i++) {
+                let itemInfo = new ItemInfo(true,getRandomId(), files[i], 1, null, getRandomId(), getRandomId(), getRandomId(), getRandomId(), getRandomId(), getRandomId(), files[i].size, 0);
+                sendItemInfo.push(itemInfo);
+                tempList.push(itemInfo);
+            }
+            if (currentTab == "send") {
+                for (let tem of tempList) {
+                    if (document.getElementById("empty") != null) {
+                        mContainer.innerHTML = null;
+                    }
+                    let child = generateChildItemView(tem);
+                    mContainer.innerHTML += child;
+                    document.getElementById(tem.sizeID).innerHTML = getSizeStr(tem.currentSize) + "/" + getSizeStr(tem.totalSize);
+                    if (tem.totalSize != 0) {
+                        document.getElementById(tem.percentId).innerHTML = (tem.currentSize / tem.totalSize * 100).toFixed(0) + "%";
+                    } else {
+                        document.getElementById(tem.percentId).innerHTML = "0%";
+                    }
+                }
+            }
+            if (currentTab=="rec"){
+                let count = getCurrentIdleCount(sendItemInfo);
+                console.log(count);
+                setViewVisibility("dot_hint_send",true,files.length);
+            }
+            sendFileListInfo(tempList);
+        }
+
+        function onFilesGet() {
+            let input_file = document.getElementById("input_file");
+            let files = input_file.files;
+            uploadFiles(files);
+        }
+
+        function sendFileListInfo(itemInfoList) {
+            if (itemInfoList.length == 0)
+                return;
+            let result = [];
+            for (let i = 0; i < itemInfoList.length; i++) {
+                let file = itemInfoList[i].file;
+                result.push('{"name": "' + file.name + '"', '"id": "' + itemInfoList[i].id + '"', '"size": "' + file.size + '"}');
+            }
+            let oAjax = new XMLHttpRequest();
+            oAjax.onreadystatechange = function () {
+                if (oAjax.readyState == 4) {
+                    if (oAjax.status == 200) {
+                        console.log("upload file list success!");
+                        let isTransferring = false;
+                        for (let item of sendItemInfo) {
+                            if (item.status == 2) {
+                                isTransferring = true;
+                                break;
+                            }
+                        }
+                        if (!isTransferring) {
+                            uploadSequentiallyAsync();
+                        }
+                    } else {
+                        console.log("upload file list failed!");
+                    }
+                }
+            };
+            oAjax.open("POST", baseUrl + "/list_info", true);
+            oAjax.send('[' + result.toString() + ']_end_');
+        }
+
+        function onAbort(itemInfo, oAjax) {
+            itemInfo.status = -4;
+            let sendItem = getSendItem();
+            if (sendItem == null)
+                return;
+            ajaxUpload(baseUrl, sendItem, onProgressChanged, onSuccess, onFail, onAbort);
+        };
+
+        function onSuccess(itemInfo, message, oAjax) {
+            itemInfo.status = -1;
+            doViewRefresh(itemInfo, message, oAjax);
+            let sendItem = getSendItem();
+            if (sendItem == null)
+                return;
+            ajaxUpload(baseUrl, sendItem, onProgressChanged, onSuccess, onFail, onAbort);
+        }
+
+        function uploadSequentiallyAsync() {
+            let sendItem = getSendItem();
+            if (sendItem == null)
+                return;
+            ajaxUpload(baseUrl, sendItem, onProgressChanged, onSuccess, onFail, onAbort);
+        }
+
+        function getSendItem() {
+            for (let item of sendItemInfo) {
+                if (item.status == 1) {
+                    return item;
+                }
+            }
+            return null;
+        }
+
+        function onSendClick() {
+            currentTab = "send";
+            let sendTab = document.getElementById("send_tab");
+            if (sendTab.style.color == "white") {
+                return;
+            }
+            setViewVisibility("dot_hint_send",false,0);
+            sendTab.style.background = "rgba(249, 249, 249, 0.1)";
+            sendTab.style.color = "#ffffff";
+            let receiveTab = document.getElementById("receive_tab");
+            receiveTab.style.background = "#171b30";
+            receiveTab.style.color = "#808087";
+            let mContainer = document.getElementById("container");
+            mContainer.innerHTML = null;
+            for (let info of sendItemInfo) {
+                let childItem = generateChildItemView(info);
+                mContainer.innerHTML += childItem;
+                document.getElementById(info.sizeID).innerHTML = getSizeStr(info.currentSize) + "/" + getSizeStr(info.totalSize);
+                if (info.totalSize != 0) {
+                    document.getElementById(info.percentId).innerHTML = (info.currentSize / info.totalSize * 100).toFixed(0) + "%";
+                } else {
+                    document.getElementById(info.percentId).innerHTML = "0%";
+                }
+                if (info.currentSize == info.totalSize || info.status == -2|| info.status == -1 || info.status == -4) {
+                    doViewRefresh(info, null, info.ajaxObj);
+                }
+            }
+            if (sendItemInfo.length == 0) {
+                mContainer.innerHTML = getEmptyView();
+            }
+        }
+
+        function setViewVisibility(id, visible,count) {
+            document.getElementById(id).style.visibility = visible ? "visible" : "hidden";
+            if (visible){
+                document.getElementById(id).innerHTML=Number.parseInt(document.getElementById(id).innerHTML)+count;
+            }else{
+                document.getElementById(id).innerHTML=0;
+            }
+        }
+
+        function getDownloadHelpHint() {
+            return "<div id='help_hint' style='width: 94.75%;height: auto;padding-top:9px;padding-bottom:9px;background: rgba(50,55,84,1);margin-left: 20px;margin-right: 30px;border-radius: 2px;display: flex;align-items: center'>"
+                + "<div style='display: flex;align-items: center'>"
+                + "<img src='" + baseUrl + "/common/hint_icon' width='16px' height='16px' style='margin-left: 10px'>"
+                + "</div>"
+                + "<label style='color: #A8BBCA;margin-left: 8px;font-size: 12px'>_hint_msg_</label>"
+                + "</div>";
+        }
+
+        function onRecClick() {
+            if (currentTab == "rec") {
+                return;
+            }
+            setViewVisibility("dot_hint", false,0);
+            currentTab = "rec";
+            let sendTab = document.getElementById("send_tab");
+            sendTab.style.background = "#171b30";
+            sendTab.style.color = "#808087";
+            let receiveTab = document.getElementById("receive_tab");
+            receiveTab.style.background = "rgba(249, 249, 249, 0.1)";
+            receiveTab.style.color = "#ffffff";
+            let mContainer = document.getElementById("container");
+            mContainer.innerHTML = null;
+            mContainer.innerHTML += getDownloadHelpHint();
+            for (let info of recItemInfo) {
+                let childItem = generateChildItemView(info);
+                mContainer.innerHTML += childItem;
+                document.getElementById(info.sizeID).innerHTML = getSizeStr(info.currentSize) + "/" + getSizeStr(info.totalSize);
+                if (info.totalSize != 0) {
+                    document.getElementById(info.percentId).innerHTML = (info.currentSize / info.totalSize * 100).toFixed(0) + "%";
+                } else {
+                    document.getElementById(info.percentId).innerHTML = "0%";
+                }
+                if (info.currentSize == info.totalSize || info.status == -2 || info.status == -1|| info.status == -4) {
+                    doViewRefresh(info, null, info.ajaxObj);
+                }
+            }
+            if (recItemInfo.length == 0) {
+                mContainer.innerHTML = getEmptyView();
+            }
+        }
+
+        let messageGet = true;
+
+        function getDownloadInfo() {
+            if (!messageGet) {
+                return;
+            }
+            messageGet = false;
+            setInterval(function () {
+                let oAjax = new XMLHttpRequest();
+                oAjax.onreadystatechange = function () {
+                    if (oAjax.readyState == 4) {
+                        if (oAjax.status == 200) {
+                            console.log(oAjax.responseText);
+                            let result = JSON.parse(oAjax.responseText);
+                            let temp = [];
+                            for (let i = 0; i < result.length; i++) {
+                                let contains = false;
+                                for (let recItemInfoElement of recItemInfo) {
+                                    if (recItemInfoElement.id == result[i].id) {
+                                        contains = true;
+                                        break
+                                    }
+                                }
+                                if (contains) {
+                                    continue;
+                                }
+                                let myFile = new MyFile(result[i].size, result[i].name, result[i].id, result[i].g_id, result[i].type);
+                                let itemInfo = new ItemInfo(false,result[i].id, myFile, 1, null, getRandomId(), getRandomId(), getRandomId(), getRandomId(), getRandomId(),getRandomId(), result[i].size, 0);
+                                recItemInfo.push(itemInfo);
+                                temp.push(itemInfo);
+                            }
+                            startDownloadSequentially();
+                            if (currentTab == "rec") {
+                                let mContainer = document.getElementById("container");
+                                if (recItemInfo.length == 0) {
+                                    mContainer.innerHTML = getEmptyView();
+                                }
+                                for (let item of temp) {
+                                    if (document.getElementById("empty") != null) {
+                                        mContainer.innerHTML = null;
+                                    }
+                                    if (document.getElementById("help_hint") == null) {
+                                        mContainer.innerHTML += getDownloadHelpHint();
+                                    }
+                                    mContainer.innerHTML += generateChildItemView(item);
+                                    document.getElementById(item.sizeID).innerHTML = getSizeStr(item.currentSize) + "/" + getSizeStr(item.totalSize);
+                                    if (item.totalSize != 0) {
+                                        document.getElementById(item.percentId).innerHTML = (item.currentSize / item.totalSize * 100).toFixed(0) + "%";
+                                    } else {
+                                        document.getElementById(item.percentId).innerHTML = "0%";
+                                    }
+                                }
+                            } else {
+                                if (temp.length > 0) {
+                                    let count=getCurrentIdleCount(recItemInfo);
+                                    setViewVisibility("dot_hint", true,temp.length);
+                                }
+                            }
+                        } else {
+                            console.log("error getDownload info");
+                        }
+                        messageGet = true;
+                    }
+                };
+                let url = baseUrl + "/get/download_info";
+                oAjax.open("GET", url, true);
+                oAjax.send(null);
+            }, 1000);
+        }
+
+        function getCurrentIdleCount(list) {
+            let count=0;
+            for (let item of list){
+                if (item.status!==-1&&item.status!==-2&&item.status!==-4){
+                    count++;
+                }
+            }
+            return count;
+        }
+
+        function getNextDownloadItem() {
+            for (let item of recItemInfo) {
+                if (item.status == 1) {
+                    return item;
+                }
+            }
+            return null;
+        }
+
+        function downloadSuccess(item) {
+            item.status = -1;
+            doViewRefresh(item, null, item.ajaxObj);
+        }
+
+        function downloadError(itemInfo) {
+            itemInfo.status = -2;
+            document.getElementById(itemInfo.percentId).parentNode.parentNode.parentNode.remove();
+            let elementById = document.getElementById(itemInfo.compId);
+            elementById.src = baseUrl + "/common/error";
+            elementById.style.visibility = "visible";
+            document.getElementById(itemInfo.sizeID).parentNode.style.marginTop="2px";
+        }
+
+        function downloadProgress(progress, total, item) {
+            try {
+                item.currentSize = progress;
+                document.getElementById(item.sizeID).innerHTML = getSizeStr(progress) + "/" + getSizeStr(total);
+                if (total != 0) {
+                    document.getElementById(item.percentId).innerHTML = (progress / total * 100).toFixed(0) + "%";
+                } else {
+                    document.getElementById(item.percentId).innerHTML = "0%";
+                }
+                let elementById = document.getElementById(item.progressId);
+
+                elementById.style.width = (progress / total*100).toFixed(0) + "%";
+            } catch (e) {
+                console.log(e.toString());
+            }
+        }
+
+        function downloadAbort(item) {
+            try {
+                item.status = -4;
+                item.ajaxObj.abort();
+            } catch (e) {
+            }
+        }
+
+        function downloadFromUrl(downloadAjax) {
+            let blob = downloadAjax.response;
+            let fileName = downloadAjax.getResponseHeader("name");
+            fileName = decodeURI(fileName);
+            fileName = fileName ? fileName : new Date().getMilliseconds().toString();
+            let uri = window.URL.createObjectURL(blob);
+            let link = document.createElement("a");
+            link.download = fileName;
+            link.href = uri;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        function startDownloadSequentially() {
+            let downloadItem = getNextDownloadItem();
+            if (downloadItem == null) {
+                return;
+            }
+            for (let i = 0; i < recItemInfo.length; i++) {
+                if (recItemInfo[i].status == 2) {
+                    return;
+                }
+            }
+            downloadItem.status = 2;
+            let downloadAjax = new XMLHttpRequest();
+            downloadItem.ajaxObj = downloadAjax;
+            downloadAjax.onload = function () {
+                downloadFromUrl(downloadAjax);
+            };
+            downloadAjax.onprogress = function (event) {
+                if (downloadItem.status == -4) {
+                    downloadAjax.abort();
+                    return;
+                }
+                if (downloadItem.file.type == 1) {
+                    downloadProgress(event.loaded, downloadItem.file.size, downloadItem);
+                } else {
+                    downloadProgress(event.loaded, event.total, downloadItem);
+                }
+
+            };
+            downloadAjax.onreadystatechange = function () {
+                if (downloadAjax.readyState == 4) {
+                    console.log("type: " + downloadItem.file.type);
+                    console.log("status: " + downloadAjax.status);
+                    if (downloadAjax.status == 200 && downloadItem.currentSize == downloadItem.totalSize) {
+                        downloadSuccess(downloadItem);
+                    } else {
+                        if (downloadItem.file.type == 1) {
+                            downloadSuccess(downloadItem);
+                            return;
+                        }
+                        downloadError(downloadItem);
+                    }
+                }
+            };
+            downloadAjax.onabort = function () {
+                downloadAbort(downloadItem);
+            };
+            downloadAjax.responseType = "blob";
+            downloadAjax.open("GET", baseUrl + "/get/download_item", true);
+            downloadAjax.setRequestHeader("item_id", downloadItem.id);
+            downloadAjax.setRequestHeader("g_id", downloadItem.file.g_id);
+            downloadAjax.setRequestHeader("status", downloadItem.status);
+            downloadAjax.send(null);
+        }
+
+        window.onload = function () {
+            let topLabel = document.getElementById("top_send_label");
+            let width = Number.parseFloat(topLabel.offsetWidth);
+
+            let topLabel_1 = document.getElementById("top_send_label_2");
+            let width_1 = Number.parseFloat(topLabel_1.offsetWidth);
+
+            let topLabel_2 = document.getElementById("top_send_label_3");
+            let width_2 = Number.parseFloat(topLabel_2.offsetWidth);
+
+            let topLabel_3 = document.getElementById("upload_img");
+            let width_3 = Number.parseFloat(topLabel_3.offsetWidth);
+
+            let parentWidth = Number.parseFloat(topLabel.parentNode.style.width);
+            topLabel.style.marginLeft = (parentWidth - width) / 2 + "px";
+            topLabel_1.style.marginLeft = (parentWidth - width_1) / 2 + "px";
+            topLabel_2.style.marginLeft = (parentWidth - width_2) / 2 + "px";
+            topLabel_3.style.marginLeft = (parentWidth - width_3) / 2 + "px";
+
+            let selectFile = document.getElementById("select_file");
+            selectFile.addEventListener("dragover",ondragOverTop);
+            selectFile.addEventListener("drop",onDropFinished);
+            selectFile.addEventListener("dragenter",onDragEnterZone);
+            selectFile.addEventListener("dragleave",onDragExitZone);
+
+            let uploadImg = document.getElementById("upload_img");
+            uploadImg.src = baseUrl + "/common/upload";
+
+            document.getElementById("logo").src = baseUrl + "/favicon.ico";
+
+
+            document.getElementById("container").innerHTML = getEmptyView();
+
+            let doc = document.getElementById("empty_img");
+            doc.src = baseUrl + "/common/empty";
+
+            getDownloadInfo();
+        };
+
+    </script>
 </head>
 <body>
+<div>
+    <div style="display: flex;align-items: center;margin-left: 24.43%;width: fit-content">
+        <img src="" id="logo" width="43px" height="43px">
+        <label style="font-size: 42px;color: white;margin-left: 13px">InShare</label>
+    </div>
+    <form enctype="multipart/form-data" hidden>
+        <input type="file" style="display: none" id="input_file" onchange="onFilesGet()" multiple>
+    </form>
 
-<header>
-  <div class="header-icon"><i class="fa-solid fa-cloud-bolt"></i></div>
-  <div class="title-wrapper">
-    <input type="text" class="site-title" value="سحاب الويب" id="phoneSiteName" title="اضغط لتغيير الاسم">
-    <span class="site-sub">حوّل أكوادك وصورك إلى روابط بلمسة واحدة</span>
-  </div>
-  <button class="gear-btn" id="gearBtn" onclick="openSettings()" title="إعدادات التوكن">
-    <i class="fa-solid fa-gear"></i>
-  </button>
-</header>
-
-<div class="phone-tabs">
-  <button class="phone-tab-btn active" onclick="changePhoneTab('code-section',this)">
-    <i class="fa-solid fa-code"></i><span>كود مباشر</span>
-  </button>
-  <button class="phone-tab-btn" onclick="changePhoneTab('file-section',this)">
-    <i class="fa-solid fa-file-code"></i><span>رفع ملف</span>
-  </button>
-  <button class="phone-tab-btn" onclick="changePhoneTab('image-section',this)">
-    <i class="fa-solid fa-image"></i><span>رفع صورة</span>
-  </button>
+    <div style="margin-top: 2.69%;margin-left: 42.55%;margin-bottom: 2.22%">
+        <label style="color: white;font-size: 28px;" id="history_title">_history_la_</label>
+    </div>
+    <div style="display: flex;margin: auto;width: 100%">
+        <div style="margin-left: 24.43%;margin-right: 2.5%;width: 15.63%">
+            <div style="border: #9197BD 3px dashed;height: 34.98%;width: 100%;border-radius: 3px;position: relative;background: rgba(249,249,249,0.1)"
+                 onclick="selectFileFromPc()" id="select_file">
+                <div style="position:absolute;margin: auto;left: 0;top: 0;right: 0;bottom: 0;width: 233px;height: fit-content;">
+                    <img src="common/upload" id="upload_img" height="fit-content" width="fit-content"
+                         style="margin-bottom: 10px"><br>
+                    <label id="top_send_label"
+                           style="color: white;font-size: 24px;">_send_la_</label><br>
+                    <label id="top_send_label_2"
+                           style="color: white;font-size: 24px;margin-bottom: 10px">_or_place_</label><br>
+                    <label id="top_send_label_3"
+                           style="color: #2986FF;font-size: 24px;margin-bottom: 10px"><u>_select_files_place_</u></label>
+                </div>
+            </div>
+        </div>
+        <div id="right_pane" style="width: 28.75%">
+            <div style="display: flex;width: 100%;margin: 0 auto;">
+                <label style="color: white;background: rgba(249,249,249,0.1);font-size: 22px;width:50%;padding-top: 16px;padding-bottom: 16px;text-align: center"
+                       id="send_tab"
+                       onclick="onSendClick()">_send_
+                    <button
+                            style="border:0;background:red;border-radius: 50%;width:21px;height:21px;color: white;visibility: hidden;font-size: 13px;text-align: center"
+                            id="dot_hint_send">0
+                    </button>
+                </label>
+                <label style="color: #808087;background: #171b30;font-size: 22px;width: 50%;padding-top: 16px;padding-bottom: 16px;text-align: center"
+                       id="receive_tab"
+                       onclick="onRecClick()">_receive_
+                    <button
+                            style="border:0;background:red;border-radius: 50%;width:21px;height:21px;color: white;visibility: hidden;font-size: 13px;text-align: center"
+                            id="dot_hint">0
+                    </button>
+                </label>
+            </div>
+            <div id="container"
+                 style="margin:0 auto;width: 100%;min-height:720px;background: rgba(249, 249, 249, 0.1);padding-top: 20px;padding-bottom: 20px"></div>
+        </div>
+    </div>
 </div>
-
-<div class="main-card">
-  <div class="workspace-body">
-
-    <div id="code-section" class="content-section active-section">
-      <div class="section-title"><i class="fa-solid fa-keyboard"></i> الصق كود الـ HTML هنا:</div>
-      <div class="phone-textarea-wrapper">
-        <textarea class="phone-textarea" id="phoneEditor" placeholder="<h1>مرحباً بك.. الصق الكود هنا</h1>"></textarea>
-      </div>
-    </div>
-
-    <div id="file-section" class="content-section">
-      <div class="section-title"><i class="fa-solid fa-file-arrow-up"></i> اختر ملف HTML من جهازك:</div>
-      <div class="mobile-drop-zone" id="fileZone" onclick="document.getElementById('fileInputPhone').click()">
-        <i class="fa-solid fa-file-shield"></i>
-        <h3 id="fileStatusText">اضغط لرفع الملف</h3>
-        <p>صيغة الملف المدعومة .html فقط</p>
-        <input type="file" id="fileInputPhone" class="hidden-input" accept=".html,.htm" onchange="fileSelected()">
-      </div>
-    </div>
-
-    <div id="image-section" class="content-section">
-      <div class="section-title"><i class="fa-solid fa-camera"></i> اختر صورة لتحويلها لرابط:</div>
-      <div class="mobile-drop-zone" id="imageZone" onclick="document.getElementById('imageInputPhone').click()">
-        <i class="fa-solid fa-wand-magic-sparkles"></i>
-        <h3 id="imageStatusText">اضغط لاختيار صورة</h3>
-        <p>يدعم PNG, JPG, JPEG, GIF</p>
-        <input type="file" id="imageInputPhone" class="hidden-input" accept="image/*" onchange="imageSelected()">
-      </div>
-    </div>
-
-    <div class="slug-panel" id="slugPanel">
-      <div class="section-title"><i class="fa-solid fa-sliders"></i> خصص رابط صفحتك:</div>
-      <div class="slug-input-container">
-        <span class="slug-prefix" id="phonePrefixShow">https://aliali345678bb-svg.github.io/</span>
-        <input type="text" class="slug-field" id="phoneSlugInput" value="project-one">
-      </div>
-    </div>
-
-    <button class="action-btn" id="launchBtn" onclick="executeUpload()">
-      <i class="fa-solid fa-bolt"></i> إطلاق وتوليد الرابط الآن
-    </button>
-
-    <div class="steps-track" id="stepsTrack">
-      <div class="step-item" id="step1"><div class="step-circle">1</div><div class="step-label">إنشاء المستودع</div></div>
-      <div class="step-item" id="step2"><div class="step-circle">2</div><div class="step-label">رفع الملف</div></div>
-      <div class="step-item" id="step3"><div class="step-circle">3</div><div class="step-label">تفعيل الاستضافة</div></div>
-    </div>
-
-    <div class="loader-ring" id="phoneLoader"></div>
-
-    <div class="result-panel" id="phoneResultPanel">
-      <div class="result-title-text"><i class="fa-solid fa-circle-check"></i> تم التجهيز! رابطك جاهز:</div>
-      <div class="result-box">
-        <input type="text" class="result-url" id="phoneFinalUrl" readonly value="">
-        <button class="phone-copy-btn" onclick="copyPhoneLink()"><i class="fa-solid fa-copy"></i> نسخ</button>
-      </div>
-      <div class="result-sub" id="resultSubNote"></div>
-    </div>
-
-    <div class="error-panel" id="errorPanel">
-      <i class="fa-solid fa-triangle-exclamation"></i>
-      <div>
-        <div class="error-title" id="errorTitle">حدث خطأ</div>
-        <div class="error-detail" id="errorDetail"></div>
-      </div>
-    </div>
-
-  </div>
-  <footer>
-    <p>&copy; <span id="yearPhone"></span> منصة سحاب الويب • تصميم وتطوير: محمد نبيل السحيقي</p>
-  </footer>
-</div>
-
-<!-- ===== Settings Modal ===== -->
-<div class="modal-overlay" id="settingsModal">
-  <div class="modal-sheet">
-    <button class="modal-close-x" onclick="closeSettings()"><i class="fa-solid fa-xmark"></i></button>
-    <div class="modal-handle"></div>
-    <div class="modal-title"><i class="fa-solid fa-key" style="color:var(--neon-cyan)"></i> توكن GitHub الخاص بك</div>
-    <div class="modal-desc">أدخل Personal Access Token (Classic) بصلاحية <b>repo</b>. يُحفظ فقط داخل متصفحك (LocalStorage) ولا يُكتب أبداً داخل الكود، لذلك لن تكتشفه روبوتات فحص GitHub ولن يُحظر.</div>
-    <div id="tokenStatusLine" class="token-status missing"><i class="fa-solid fa-circle-xmark"></i> لا يوجد توكن محفوظ حالياً</div>
-    <div class="token-input-wrap">
-      <input type="password" class="token-input" id="tokenInputField" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx">
-      <button class="eye-btn" onclick="toggleTokenVisibility()"><i class="fa-solid fa-eye" id="eyeIcon"></i></button>
-    </div>
-    <div class="modal-note"><i class="fa-solid fa-shield-halved"></i> نصيحة أمان: أنشئ توكن جديد من GitHub → Settings → Developer settings → Personal access tokens، وفعّل صلاحية repo فقط، ولا تشاركه مع أحد.</div>
-    <div class="modal-actions">
-      <button class="modal-btn clear" onclick="clearTokenAction()"><i class="fa-solid fa-trash"></i> حذف</button>
-      <button class="modal-btn save" onclick="saveTokenAction()"><i class="fa-solid fa-check"></i> حفظ التوكن</button>
-    </div>
-  </div>
-</div>
-
-<script>
-document.getElementById('yearPhone').textContent = new Date().getFullYear();
-
-/* ================= CONFIG ================= */
-const CONFIG = {
-  imgbbKey: "F0bcba4b4ae8fd10de0e45c5860a2837",
-  githubUser: "aliali345678bb-svg",
-  tokenStorageKey: "sahab_alweb_gh_token"
-};
-
-function getToken(){ return localStorage.getItem(CONFIG.tokenStorageKey) || ""; }
-function setToken(v){ localStorage.setItem(CONFIG.tokenStorageKey, v.trim()); }
-function clearToken(){ localStorage.removeItem(CONFIG.tokenStorageKey); }
-
-/* ================= Settings Modal ================= */
-function refreshGearIndicator(){
-  const gear = document.getElementById('gearBtn');
-  const has = !!getToken();
-  gear.classList.toggle('has-token', has);
-  gear.classList.toggle('no-token', !has);
-}
-function refreshTokenStatusLine(){
-  const line = document.getElementById('tokenStatusLine');
-  const has = !!getToken();
-  if(has){
-    line.className = 'token-status ok';
-    line.innerHTML = '<i class="fa-solid fa-circle-check"></i> يوجد توكن محفوظ في هذا المتصفح';
-  } else {
-    line.className = 'token-status missing';
-    line.innerHTML = '<i class="fa-solid fa-circle-xmark"></i> لا يوجد توكن محفوظ حالياً';
-  }
-}
-function openSettings(){
-  document.getElementById('tokenInputField').value = getToken();
-  refreshTokenStatusLine();
-  document.getElementById('settingsModal').classList.add('open');
-}
-function closeSettings(){ document.getElementById('settingsModal').classList.remove('open'); }
-function toggleTokenVisibility(){
-  const input = document.getElementById('tokenInputField');
-  const icon = document.getElementById('eyeIcon');
-  if(input.type === 'password'){ input.type = 'text'; icon.className = 'fa-solid fa-eye-slash'; }
-  else { input.type = 'password'; icon.className = 'fa-solid fa-eye'; }
-}
-function saveTokenAction(){
-  const val = document.getElementById('tokenInputField').value.trim();
-  if(!val){ alert('الرجاء إدخال توكن صالح قبل الحفظ.'); return; }
-  setToken(val);
-  refreshGearIndicator();
-  refreshTokenStatusLine();
-  closeSettings();
-}
-function clearTokenAction(){
-  clearToken();
-  document.getElementById('tokenInputField').value = "";
-  refreshGearIndicator();
-  refreshTokenStatusLine();
-}
-document.getElementById('settingsModal').addEventListener('click', function(e){
-  if(e.target === this) closeSettings();
-});
-refreshGearIndicator();
-
-/* ================= Tabs ================= */
-let currentTab = 'code-section';
-function changePhoneTab(sectionId, btnEl){
-  currentTab = sectionId;
-  document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active-section'));
-  document.querySelectorAll('.phone-tab-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById(sectionId).classList.add('active-section');
-  btnEl.classList.add('active');
-  resetPanels();
-
-  const slugPanel = document.getElementById('slugPanel');
-  if(sectionId === 'image-section'){
-    slugPanel.style.display = 'none';
-  } else {
-    slugPanel.style.display = 'block';
-    document.getElementById('phonePrefixShow').textContent = `https://${CONFIG.githubUser}.github.io/`;
-    document.getElementById('phoneSlugInput').disabled = false;
-    if(!document.getElementById('phoneSlugInput').value || document.getElementById('phoneSlugInput').dataset.auto === '1'){
-      document.getElementById('phoneSlugInput').value = "project-" + Math.floor(Math.random()*1000);
-      document.getElementById('phoneSlugInput').dataset.auto = '1';
-    }
-  }
-}
-
-function resetPanels(){
-  document.getElementById('phoneResultPanel').style.display = 'none';
-  document.getElementById('errorPanel').style.display = 'none';
-  document.getElementById('stepsTrack').classList.remove('visible');
-  ['step1','step2','step3'].forEach(id=>{
-    const el = document.getElementById(id);
-    el.classList.remove('active','done','error');
-  });
-}
-
-/* ================= File / Image selection ================= */
-function fileSelected(){
-  const input = document.getElementById('fileInputPhone');
-  const zone = document.getElementById('fileZone');
-  if(input.files.length > 0){
-    document.getElementById('fileStatusText').textContent = "✓ تم اختيار: " + input.files[0].name;
-    zone.classList.add('selected-zone');
-  }
-}
-function imageSelected(){
-  const input = document.getElementById('imageInputPhone');
-  const zone = document.getElementById('imageZone');
-  if(input.files.length > 0){
-    document.getElementById('imageStatusText').textContent = "✓ تم اختيار الصورة بنجاح";
-    zone.classList.add('selected-zone');
-  }
-}
-
-/* ================= Error helpers ================= */
-function showError(title, detail){
-  document.getElementById('errorTitle').textContent = title;
-  document.getElementById('errorDetail').textContent = detail;
-  document.getElementById('errorPanel').style.display = 'flex';
-}
-function markStepError(stepId){
-  const el = document.getElementById(stepId);
-  el.classList.remove('active');
-  el.classList.add('error');
-}
-
-async function parseGhError(response){
-  let msg = "";
-  try{ const j = await response.json(); msg = j.message || ""; }catch(e){}
-  return msg;
-}
-
-function friendlyGhError(status, rawMsg){
-  switch(status){
-    case 401: return "التوكن غير صالح أو منتهي الصلاحية. افتح الإعدادات وأدخل توكن جديد.";
-    case 403: return rawMsg && rawMsg.toLowerCase().includes('rate limit')
-        ? "تجاوزت الحد المسموح من الطلبات إلى GitHub، حاول بعد قليل."
-        : "التوكن لا يملك صلاحية 'repo' الكافية لتنفيذ هذه العملية.";
-    case 404: return "لم يتم العثور على المورد المطلوب على GitHub (تحقق من اسم المستخدم أو المستودع).";
-    case 422: return rawMsg || "الاسم المطلوب غير صالح أو المستودع موجود بنفس الاسم بالفعل.";
-    case 409: return "تعارض في الحالة الحالية للمستودع (قد يكون فارغاً أو قيد التهيئة).";
-    default: return rawMsg || ("حدث خطأ غير متوقع (كود " + status + ").");
-  }
-}
-
-/* ================= GitHub flow ================= */
-async function ghFetch(url, options){
-  const token = getToken();
-  options = options || {};
-  options.headers = Object.assign({
-    "Authorization": "token " + token,
-    "Accept": "application/vnd.github+json",
-    "X-GitHub-Api-Version": "2022-11-28"
-  }, options.headers || {});
-  return fetch(url, options);
-}
-
-async function repoExists(repoName){
-  const res = await ghFetch(`https://api.github.com/repos/${CONFIG.githubUser}/${repoName}`);
-  if(res.status === 200) return true;
-  if(res.status === 404) return false;
-  const msg = await parseGhError(res);
-  throw { stage:'check', status: res.status, message: friendlyGhError(res.status, msg) };
-}
-
-async function createRepo(repoName){
-  const res = await ghFetch(`https://api.github.com/user/repos`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ name: repoName, auto_init: true, description: "تم النشر عبر سحاب الويب" })
-  });
-  if(res.status === 201) return true;
-  const msg = await parseGhError(res);
-  // 422 قد تعني أن المستودع موجود بالفعل بنفس الاسم
-  if(res.status === 422 && msg && msg.toLowerCase().includes('already exists')){
-    return true;
-  }
-  throw { stage:'create', status: res.status, message: friendlyGhError(res.status, msg) };
-}
-
-async function waitForRepoReady(repoName, attempts=6, delay=1200){
-  for(let i=0;i<attempts;i++){
-    try{
-      const ok = await repoExists(repoName);
-      if(ok) return true;
-    }catch(e){ /* استمر بالمحاولة */ }
-    await new Promise(r=>setTimeout(r, delay));
-  }
-  return false;
-}
-
-async function getFileSha(repoName, fileName){
-  const res = await ghFetch(`https://api.github.com/repos/${CONFIG.githubUser}/${repoName}/contents/${fileName}`);
-  if(res.status === 200){
-    const data = await res.json();
-    return data.sha || null;
-  }
-  return null; // غير موجود = ملف جديد
-}
-
-async function putFile(repoName, fileName, base64Content, sha){
-  const bodyObj = { message: "تحديث تلقائي عبر منصة سحاب الويب", content: base64Content, branch: "main" };
-  if(sha) bodyObj.sha = sha;
-  const res = await ghFetch(`https://api.github.com/repos/${CONFIG.githubUser}/${repoName}/contents/${fileName}`, {
-    method: "PUT",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(bodyObj)
-  });
-  if(res.ok) return true;
-  const msg = await parseGhError(res);
-  throw { stage:'upload', status: res.status, message: friendlyGhError(res.status, msg) };
-}
-
-async function enablePages(repoName){
-  const res = await ghFetch(`https://api.github.com/repos/${CONFIG.githubUser}/${repoName}/pages`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ source: { branch: "main", path: "/" } })
-  });
-  if(res.status === 201 || res.status === 200) return true;
-  if(res.status === 409) return true; // مفعّلة مسبقاً
-  const msg = await parseGhError(res);
-  throw { stage:'pages', status: res.status, message: friendlyGhError(res.status, msg) };
-}
-
-/* ================= Main action ================= */
-async function executeUpload(){
-  const loader = document.getElementById('phoneLoader');
-  const panel = document.getElementById('phoneResultPanel');
-  const finalField = document.getElementById('phoneFinalUrl');
-  const launchBtn = document.getElementById('launchBtn');
-  const stepsTrack = document.getElementById('stepsTrack');
-
-  resetPanels();
-
-  if(currentTab !== 'image-section' && !getToken()){
-    showError("لم يتم إعداد التوكن", "الرجاء الضغط على أيقونة الترس ⚙️ في الأعلى وإدخال توكن GitHub أولاً.");
-    openSettings();
-    return;
-  }
-
-  launchBtn.disabled = true;
-  loader.style.display = 'block';
-
-  try{
-    if(currentTab === 'image-section'){
-      const fileInput = document.getElementById('imageInputPhone');
-      if(fileInput.files.length === 0){ showError("لم يتم اختيار صورة", "الرجاء اختيار صورة أولاً قبل الضغط على زر الإطلاق."); return; }
-
-      let formData = new FormData();
-      formData.append("image", fileInput.files[0]);
-
-      let response;
-      try{
-        response = await fetch(`https://api.imgbb.com/1/upload?key=${CONFIG.imgbbKey}`, { method:"POST", body: formData });
-      }catch(netErr){
-        showError("تعذّر الاتصال بخادم ImgBB", "تحقق من اتصال الإنترنت لديك ثم حاول مرة أخرى.");
-        return;
-      }
-      const result = await response.json();
-      if(result.success){
-        finalField.value = result.data.url;
-        document.getElementById('resultSubNote').textContent = "";
-        panel.style.display = 'block';
-      } else {
-        showError("فشل رفع الصورة", (result.error && result.error.message) || "تأكد من نوع وحجم الملف ثم حاول مجدداً.");
-      }
-      return;
-    }
-
-    // ===== HTML deploy flow =====
-    stepsTrack.classList.add('visible');
-    let content = "";
-    let slug = document.getElementById('phoneSlugInput').value.trim().replace(/[^a-zA-Z0-9-_]/g,'-');
-    if(!slug){ showError("اسم الرابط مفقود", "الرجاء إدخال اسم مخصص صالح للرابط."); return; }
-
-    if(currentTab === 'code-section'){
-      content = document.getElementById('phoneEditor').value.trim();
-      if(!content){ showError("لا يوجد كود", "الرجاء كتابة أو لصق كود HTML أولاً."); return; }
-    } else {
-      const fileInput = document.getElementById('fileInputPhone');
-      if(fileInput.files.length === 0){ showError("لم يتم اختيار ملف", "الرجاء اختيار ملف HTML أولاً."); return; }
-      content = await fileInput.files[0].text();
-    }
-
-    const repoName = slug;
-    const fileName = "index.html";
-    const base64Content = btoa(unescape(encodeURIComponent(content)));
-
-    // Step 1: التأكد من/إنشاء المستودع
-    document.getElementById('step1').classList.add('active');
-    let exists;
-    try{
-      exists = await repoExists(repoName);
-      if(!exists){
-        await createRepo(repoName);
-        const ready = await waitForRepoReady(repoName);
-        if(!ready) throw { stage:'create', message:"تم إنشاء المستودع لكنه لم يصبح جاهزاً في الوقت المناسب، حاول الإطلاق مرة أخرى بعد لحظات." };
-      }
-    }catch(e){
-      markStepError('step1');
-      showError("فشل في إنشاء أو التحقق من المستودع", e.message || "تحقق من صلاحيات التوكن ثم حاول مجدداً.");
-      return;
-    }
-    document.getElementById('step1').classList.remove('active');
-    document.getElementById('step1').classList.add('done');
-
-    // Step 2: رفع ملف index.html
-    document.getElementById('step2').classList.add('active');
-    try{
-      const sha = await getFileSha(repoName, fileName);
-      await putFile(repoName, fileName, base64Content, sha);
-    }catch(e){
-      markStepError('step2');
-      showError("فشل في رفع ملف index.html", e.message || "حدث خطأ أثناء الاتصال بـ GitHub.");
-      return;
-    }
-    document.getElementById('step2').classList.remove('active');
-    document.getElementById('step2').classList.add('done');
-
-    // Step 3: تفعيل GitHub Pages
-    document.getElementById('step3').classList.add('active');
-    try{
-      await enablePages(repoName);
-    }catch(e){
-      markStepError('step3');
-      showError("فشل في تفعيل الاستضافة (Pages)", e.message || "قد تحتاج لتفعيلها يدوياً من إعدادات المستودع.");
-      return;
-    }
-    document.getElementById('step3').classList.remove('active');
-    document.getElementById('step3').classList.add('done');
-
-    finalField.value = `https://${CONFIG.githubUser}.github.io/${repoName}/`;
-    document.getElementById('resultSubNote').textContent = "ملاحظة: قد يستغرق ظهور الصفحة فعلياً 30-60 ثانية إضافية حتى تنتهي GitHub من عملية البناء.";
-    panel.style.display = 'block';
-
-  } catch(unexpected){
-    console.error(unexpected);
-    showError("خطأ غير متوقع", "حدث خطأ في الشبكة أو في تنفيذ العملية، يرجى المحاولة مجدداً.");
-  } finally {
-    loader.style.display = 'none';
-    launchBtn.disabled = false;
-  }
-}
-
-/* ================= Copy ================= */
-function copyPhoneLink(){
-  const field = document.getElementById('phoneFinalUrl');
-  field.select();
-  field.setSelectionRange(0, 99999);
-  navigator.clipboard.writeText(field.value);
-  const btn = event.currentTarget;
-  btn.innerHTML = '<i class="fa-solid fa-check"></i> تم!';
-  setTimeout(()=>{ btn.innerHTML = '<i class="fa-solid fa-copy"></i> نسخ'; }, 2000);
-}
-</script>
 </body>
 </html>
