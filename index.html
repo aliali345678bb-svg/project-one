@@ -2,483 +2,716 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>كروما الذكاء الاصطناعي</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>استوديو الفصل الأخضر | محمد نبيل السحيقي</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#0b0d0c;
-    --panel:#131715;
-    --green:#39e07a;
-    --green-dim:#1f6b3e;
-    --text:#eef2ef;
-    --text-dim:#8a948e;
-    --danger:#e0473d;
-    --accent:#1e1e1e;
+    --bg:#06080a;
+    --panel:rgba(18,22,26,0.72);
+    --panel-border:rgba(255,255,255,0.08);
+    --neon:#00ffb2;
+    --neon-dim:rgba(0,255,178,0.18);
+    --neon-glow:rgba(0,255,178,0.45);
+    --gold:#d4af6a;
+    --text:#eef2f0;
+    --muted:#8a948f;
+    --danger:#ff4d6d;
   }
-  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  *{box-sizing:border-box; -webkit-tap-highlight-color: transparent;}
   html,body{
-    margin:0;padding:0;height:100%;background:var(--bg);
-    font-family: "Segoe UI", Tahoma, Arial, sans-serif;
-    color:var(--text);
-    overscroll-behavior:none;
+    margin:0; padding:0; height:100%; background:var(--bg);
+    font-family:'Tajawal',sans-serif; color:var(--text);
+    overflow:hidden; overscroll-behavior:none;
   }
+  body{
+    background:
+      radial-gradient(circle at 15% 10%, rgba(0,255,178,0.07), transparent 40%),
+      radial-gradient(circle at 90% 85%, rgba(212,175,106,0.06), transparent 45%),
+      var(--bg);
+  }
+
+  #app{ position:relative; width:100%; height:100vh; height:100dvh; }
+
+  /* ===== Canvas / Video stage ===== */
   #stage{
-    position:relative;width:100%;height:100vh;
-    display:flex;align-items:center;justify-content:center;
-    overflow:hidden;background:#000;
+    position:absolute; inset:0;
+    display:flex; align-items:center; justify-content:center;
+    background:#000;
   }
   video, canvas{
-    position:absolute; top:0; left:0;
+    position:absolute; inset:0;
     width:100%; height:100%;
     object-fit:cover;
   }
-  video{visibility:hidden;}
-  #outputCanvas{z-index:2;}
+  #sourceVideo{ visibility:hidden; }
+  #outputCanvas{ z-index:2; }
 
-  #topbar{
-    position:absolute; top:0; left:0; right:0;
-    z-index:10;
-    padding: calc(env(safe-area-inset-top) + 12px) 14px 10px;
-    display:flex; align-items:center; justify-content:space-between;
-    background:linear-gradient(to bottom, rgba(0,0,0,.55), transparent);
-  }
-  #status{
-    font-size:13px; color:var(--text-dim);
-    display:flex; align-items:center; gap:6px;
-  }
-  .dot{width:8px;height:8px;border-radius:50%;background:var(--text-dim);}
-  .dot.ready{background:var(--green); box-shadow:0 0 8px var(--green);}
-  .dot.rec{background:var(--danger); box-shadow:0 0 8px var(--danger); animation:pulse 1s infinite;}
-  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
-
-  #title{
-    font-size:14px; font-weight:600; letter-spacing:.5px; color:var(--text);
-    opacity:.85;
+  /* تأثير فينييت فاخر فوق الكاميرا */
+  #vignette{
+    position:absolute; inset:0; z-index:3; pointer-events:none;
+    background: radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,0.55) 100%);
   }
 
-  #controls{
-    position:absolute; left:0; right:0; bottom:0; z-index:10;
-    padding: 14px 14px calc(env(safe-area-inset-bottom) + 18px);
-    background:linear-gradient(to top, rgba(0,0,0,.65), transparent);
-    display:flex; flex-direction:column; gap:14px;
+  /* ===== شاشة البداية ===== */
+  #startScreen{
+    position:absolute; inset:0; z-index:50;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    gap:22px; padding:32px; text-align:center;
+    background: linear-gradient(180deg, #050706 0%, #090c0b 60%, #050706 100%);
   }
-  #bgRow{
-    display:flex; gap:10px; justify-content:center; flex-wrap:wrap;
+  .brandmark{
+    width:84px; height:84px; border-radius:24px;
+    display:flex; align-items:center; justify-content:center;
+    background: linear-gradient(135deg, rgba(0,255,178,0.16), rgba(0,255,178,0.02));
+    border:1px solid var(--neon-dim);
+    box-shadow: 0 0 40px var(--neon-glow), inset 0 0 20px rgba(0,255,178,0.08);
+    animation: floaty 4s ease-in-out infinite;
   }
-  .bgChoice{
-    width:38px;height:38px;border-radius:10px;border:2px solid rgba(255,255,255,.15);
-    cursor:pointer; flex:0 0 auto;
+  @keyframes floaty{ 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+  .brandmark svg{ width:42px; height:42px; }
+  h1.title{
+    font-size:26px; font-weight:900; margin:0; letter-spacing:0.5px;
+    background: linear-gradient(90deg, #fff, var(--neon) 70%);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
   }
-  .bgChoice.active{border-color:var(--green); box-shadow:0 0 0 2px rgba(57,224,122,.3);}
-  .bgChoice.swatch-black{background:#000;}
-  .bgChoice.swatch-green{background:#00ff3c;}
-  .bgChoice.swatch-blue{background:#0033ff;}
-  .bgChoice.swatch-white{background:#fff;}
+  p.subtitle{ color:var(--muted); font-size:14px; max-width:300px; line-height:1.8; margin:0; }
+  .startBtn{
+    margin-top:10px; padding:16px 42px; border-radius:100px; border:none;
+    background: linear-gradient(135deg, var(--neon), #00c98e);
+    color:#04140d; font-weight:900; font-size:16px; font-family:inherit;
+    box-shadow: 0 8px 30px var(--neon-glow); cursor:pointer;
+    display:flex; align-items:center; gap:10px;
+  }
+  .startBtn:active{ transform:scale(0.97); }
+  #permError{
+    color:var(--danger); font-size:13px; max-width:280px; line-height:1.7; display:none;
+  }
 
-  #mainRow{
-    display:flex; align-items:center; justify-content:space-between;
+  /* ===== شريط علوي ===== */
+  #topBar{
+    position:absolute; top:0; right:0; left:0; z-index:20;
+    display:flex; justify-content:space-between; align-items:center;
+    padding: max(14px, env(safe-area-inset-top)) 16px 14px;
+    background: linear-gradient(180deg, rgba(0,0,0,0.65), transparent);
   }
-  .sideBtns{display:flex; gap:10px;}
+  .pill{
+    display:flex; align-items:center; gap:8px;
+    background:var(--panel); border:1px solid var(--panel-border);
+    backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+    padding:9px 14px; border-radius:100px; font-size:12.5px; font-weight:500;
+    color:var(--text);
+  }
+  .dot{ width:8px; height:8px; border-radius:50%; background:var(--danger); }
+  .dot.live{ background:var(--neon); box-shadow:0 0 8px var(--neon); animation:pulse 1.2s infinite; }
+  @keyframes pulse{ 0%,100%{opacity:1} 50%{opacity:0.4} }
+  #timer{ font-variant-numeric: tabular-nums; font-weight:700; }
   .iconBtn{
-    width:48px;height:48px;border-radius:50%;
-    background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.15);
-    color:var(--text); display:flex; align-items:center; justify-content:center;
-    font-size:20px; cursor:pointer; user-select:none;
+    width:40px; height:40px; border-radius:50%;
+    background:var(--panel); border:1px solid var(--panel-border);
+    backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+    display:flex; align-items:center; justify-content:center;
+    color:var(--text); cursor:pointer;
   }
-  .iconBtn:active{background:rgba(255,255,255,.18);}
-  .iconBtn.on{background:rgba(57,224,122,.18); border-color:var(--green); color:var(--green);}
+  .iconBtn svg{ width:19px; height:19px; }
+
+  /* ===== لوحة الخلفيات (تفتح للأعلى) ===== */
+  #bgPanel{
+    position:absolute; left:0; right:0; bottom:128px; z-index:25;
+    transform: translateY(140%); transition: transform 0.35s cubic-bezier(.2,.9,.2,1);
+    padding: 0 16px;
+  }
+  #bgPanel.open{ transform:translateY(0); }
+  .bgPanelInner{
+    background:var(--panel); border:1px solid var(--panel-border);
+    backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+    border-radius:22px; padding:14px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+  }
+  .bgPanelTitle{ font-size:12px; color:var(--muted); margin:2px 6px 10px; font-weight:500; }
+  .bgRow{ display:flex; gap:10px; overflow-x:auto; padding-bottom:4px; }
+  .bgRow::-webkit-scrollbar{ display:none; }
+  .bgOption{
+    flex:0 0 auto; width:62px; height:62px; border-radius:16px;
+    border:2px solid transparent; position:relative; overflow:hidden;
+    display:flex; align-items:center; justify-content:center; cursor:pointer;
+    background-size:cover; background-position:center;
+  }
+  .bgOption.active{ border-color:var(--neon); box-shadow:0 0 14px var(--neon-glow); }
+  .bgOption svg{ width:22px; height:22px; color:#fff; }
+  .bgOption.green{ background:linear-gradient(135deg,#00ff6a,#00b34d); }
+  .bgOption.blue{ background:linear-gradient(135deg,#0066ff,#003c99); }
+  .bgOption.custom{ background:rgba(255,255,255,0.06); border:1px dashed rgba(255,255,255,0.25); }
+  .bgOption .removeX{
+    position:absolute; top:2px; left:2px; width:18px; height:18px; border-radius:50%;
+    background:rgba(0,0,0,0.6); display:flex; align-items:center; justify-content:center;
+    font-size:11px; color:#fff;
+  }
+
+  /* ===== شريط أدوات سفلي ===== */
+  #bottomBar{
+    position:absolute; bottom:0; left:0; right:0; z-index:20;
+    padding: 18px 22px max(20px, env(safe-area-inset-bottom));
+    background: linear-gradient(0deg, rgba(0,0,0,0.75), transparent);
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .sideBtn{
+    width:52px; height:52px; border-radius:50%;
+    background:var(--panel); border:1px solid var(--panel-border);
+    backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+    display:flex; align-items:center; justify-content:center;
+    color:var(--text); cursor:pointer; flex-direction:column; gap:2px;
+  }
+  .sideBtn svg{ width:22px; height:22px; }
+  .sideBtn span{ font-size:9px; color:var(--muted); }
 
   #recordBtn{
-    width:74px;height:74px;border-radius:50%;
-    background:var(--danger);
-    border:5px solid rgba(255,255,255,.85);
-    cursor:pointer;
+    width:78px; height:78px; border-radius:50%;
+    background:transparent; border:4px solid #fff;
+    display:flex; align-items:center; justify-content:center; cursor:pointer;
+    position:relative;
   }
-  #recordBtn.recording{
-    border-radius:14px; width:34px; height:34px;
-    border:5px solid rgba(255,255,255,.85);
+  #recordBtn .inner{
+    width:60px; height:60px; border-radius:50%; background:var(--danger);
+    transition: all 0.25s ease;
   }
-  #recWrap{
-    width:80px;height:80px;border-radius:50%;
-    display:flex;align-items:center;justify-content:center;
-  }
+  #recordBtn.recording .inner{ border-radius:14px; width:30px; height:30px; }
+  #recordBtn.recording{ border-color:var(--danger); }
 
-  #loadingOverlay{
-    position:absolute; inset:0; z-index:20;
-    background:rgba(8,10,9,.92);
-    display:flex; flex-direction:column; align-items:center; justify-content:center;
-    gap:14px; text-align:center; padding:20px;
+  /* ===== مؤشر تحميل النموذج ===== */
+  #modelLoading{
+    position:absolute; inset:0; z-index:60;
+    background:rgba(5,7,6,0.92);
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px;
   }
   .spinner{
-    width:34px;height:34px;border-radius:50%;
-    border:3px solid rgba(255,255,255,.15); border-top-color:var(--green);
+    width:44px; height:44px; border-radius:50%;
+    border:3px solid rgba(0,255,178,0.15); border-top-color:var(--neon);
     animation:spin 0.9s linear infinite;
   }
-  @keyframes spin{to{transform:rotate(360deg)}}
-  #loadingOverlay p{color:var(--text-dim); font-size:13px; max-width:280px; line-height:1.6;}
+  @keyframes spin{ to{transform:rotate(360deg)} }
+  #modelLoading p{ color:var(--muted); font-size:13px; }
 
-  #downloadToast{
-    position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
-    background:rgba(20,24,21,.97); border:1px solid rgba(57,224,122,.4);
-    padding:22px 26px; border-radius:14px; z-index:30; text-align:center;
-    display:none; max-width:320px;
+  /* ===== شاشة المعاينة بعد التسجيل ===== */
+  #previewScreen{
+    position:absolute; inset:0; z-index:70; background:#000;
+    display:none; flex-direction:column;
   }
-  #downloadToast h3{margin:0 0 8px; font-size:16px; color:var(--green);}
-  #downloadToast p{margin:0 0 16px; font-size:13px; color:var(--text-dim); line-height:1.6;}
-  #downloadToast a, #downloadToast button{
-    display:inline-block; padding:10px 18px; border-radius:8px;
-    background:var(--green); color:#0b0d0c; font-weight:600; text-decoration:none;
-    border:none; font-size:14px; cursor:pointer; margin:0 4px;
+  #previewScreen video{ position:relative; width:100%; height:100%; object-fit:contain; }
+  #previewBar{
+    position:absolute; bottom:0; left:0; right:0;
+    padding:18px 20px max(22px, env(safe-area-inset-bottom));
+    display:flex; gap:12px;
+    background: linear-gradient(0deg, rgba(0,0,0,0.85), transparent);
   }
-  #closeToast{background:transparent !important; color:var(--text-dim) !important; border:1px solid rgba(255,255,255,.2) !important;}
+  #previewTop{
+    position:absolute; top:0; left:0; right:0;
+    padding: max(14px, env(safe-area-inset-top)) 16px 14px;
+    background: linear-gradient(180deg, rgba(0,0,0,0.7), transparent);
+  }
+  .bigBtn{
+    flex:1; padding:15px; border-radius:16px; border:none; font-family:inherit;
+    font-weight:700; font-size:14.5px; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px;
+  }
+  .bigBtn.primary{ background:linear-gradient(135deg, var(--neon), #00c98e); color:#04140d; box-shadow:0 6px 24px var(--neon-glow); }
+  .bigBtn.ghost{ background:var(--panel); border:1px solid var(--panel-border); color:var(--text); backdrop-filter: blur(14px); }
+  #saveToast{
+    position:absolute; top:70px; left:50%; transform:translateX(-50%) translateY(-20px); z-index:80;
+    background:rgba(0,255,178,0.12); border:1px solid var(--neon-dim); color:var(--neon);
+    padding:11px 22px; border-radius:100px; font-size:13px; font-weight:700;
+    opacity:0; transition: all 0.3s ease; pointer-events:none; white-space:nowrap;
+  }
+  #saveToast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
 
-  .hidden{display:none !important;}
-
-  #permError{
-    position:absolute; inset:0; z-index:25; background:var(--bg);
-    display:flex; flex-direction:column; align-items:center; justify-content:center;
-    gap:12px; padding:30px; text-align:center;
-  }
-  #permError button{
-    margin-top:10px; padding:10px 20px; border-radius:8px; border:none;
-    background:var(--green); color:#0b0d0c; font-weight:700; font-size:14px;
+  input[type=file]{ display:none; }
+  input[type=color]{
+    width:48px; height:48px; border:none; border-radius:16px; background:none; padding:0; cursor:pointer;
   }
 </style>
 </head>
 <body>
+<div id="app">
 
-<div id="stage">
-  <video id="srcVideo" autoplay playsinline muted></video>
-  <canvas id="outputCanvas"></canvas>
-
-  <div id="topbar">
-    <div id="status"><span class="dot" id="statusDot"></span><span id="statusText">جاري التحميل...</span></div>
-    <div id="title">عزل الخلفية</div>
+  <!-- شاشة البداية -->
+  <div id="startScreen">
+    <div class="brandmark">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#00ffb2" stroke-width="1.6"><path d="M9 9h6v6H9z" stroke-linejoin="round"/><path d="M4 9V6a2 2 0 0 1 2-2h3M4 15v3a2 2 0 0 0 2 2h3M20 9V6a2 2 0 0 0-2-2h-3M20 15v3a2 2 0 0 1-2 2h-3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+    <h1 class="title">استوديو الفصل الأخضر</h1>
+    <p class="subtitle">كاميرا ذكية تفصل خلفيتك مباشرة أثناء التصوير — بدون أي قماش أخضر حقيقي</p>
+    <button class="startBtn" id="startBtn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#04140d" stroke-width="2"><path d="M23 7l-7 5 7 5V7z" stroke-linejoin="round"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+      تفعيل الكاميرا
+    </button>
+    <p id="permError">يرجى السماح بالوصول إلى الكاميرا والميكروفون من إعدادات المتصفح للمتابعة</p>
   </div>
 
-  <div id="controls">
-    <div id="bgRow">
-      <div class="bgChoice swatch-black active" data-bg="black" title="خلفية سوداء"></div>
-      <div class="bgChoice swatch-green" data-bg="green" title="كروما خضراء"></div>
-      <div class="bgChoice swatch-blue" data-bg="blue" title="كروما زرقاء"></div>
-      <div class="bgChoice swatch-white" data-bg="white" title="خلفية بيضاء"></div>
-    </div>
-    <div id="mainRow">
-      <div class="sideBtns">
-        <div class="iconBtn" id="mirrorBtn" title="عكس الصورة (مرآة)">⇋</div>
-        <div class="iconBtn" id="switchCamBtn" title="تبديل الكاميرا">⟲</div>
-      </div>
-      <div id="recWrap">
-        <div id="recordBtn"></div>
-      </div>
-      <div class="sideBtns">
-        <div class="iconBtn" id="qualityBtn" title="دقة العزل">⚙</div>
-      </div>
-    </div>
-  </div>
-
-  <div id="loadingOverlay">
+  <!-- مؤشر تحميل النموذج -->
+  <div id="modelLoading" style="display:none;">
     <div class="spinner"></div>
-    <p id="loadingText">يتم تحميل نموذج الذكاء الاصطناعي لعزل الخلفية... (أول مرة فقط، يحتاج اتصال إنترنت)</p>
+    <p>جاري تجهيز محرك العزل الذكي...</p>
   </div>
 
-  <div id="permError" class="hidden">
-    <div style="font-size:40px;">📷</div>
-    <p style="color:var(--text-dim); font-size:14px; max-width:300px; line-height:1.7;" id="permErrorText">
-      لم نتمكن من الوصول إلى الكاميرا. تأكد من إعطاء إذن الكاميرا للمتصفح، ومن أنك تفتح الصفحة عبر HTTPS.
-    </p>
-    <button id="retryBtn">إعادة المحاولة</button>
+  <!-- المسرح الرئيسي -->
+  <div id="stage" style="display:none;">
+    <video id="sourceVideo" playsinline muted autoplay></video>
+    <canvas id="outputCanvas"></canvas>
+    <div id="vignette"></div>
   </div>
 
-  <div id="downloadToast">
-    <h3>تم تجهيز الفيديو ✅</h3>
-    <p>اضغط على "حفظ الفيديو" ثم اخترِ "حفظ في الصور / المعرض" من قائمة المشاركة في هاتفك.</p>
-    <a id="downloadLink" download="green-screen-video.webm">حفظ الفيديو</a>
-    <button id="closeToast">إغلاق</button>
+  <!-- شريط علوي -->
+  <div id="topBar" style="display:none;">
+    <div class="pill"><span class="dot" id="recDot"></span><span id="timer">00:00</span></div>
+    <div style="display:flex; gap:10px;">
+      <div class="iconBtn" id="switchCamBtn" title="تبديل الكاميرا">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 1l4 4-4 4M3 11V9a4 4 0 0 1 4-4h14M7 23l-4-4 4-4M21 13v2a4 4 0 0 1-4 4H3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="iconBtn" id="micBtn" title="كتم/تشغيل الصوت">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v4" stroke-linecap="round"/></svg>
+      </div>
+    </div>
   </div>
+
+  <!-- لوحة الخلفيات -->
+  <div id="bgPanel">
+    <div class="bgPanelInner">
+      <div class="bgPanelTitle">اختر الخلفية البديلة</div>
+      <div class="bgRow" id="bgRow">
+        <div class="bgOption green active" data-type="green" title="أخضر صافي"></div>
+        <div class="bgOption blue" data-type="blue" title="أزرق صافي"></div>
+        <div class="bgOption" data-type="color" id="colorOption" title="لون مخصص" style="background:#222;">
+          <input type="color" id="colorPicker" value="#ff2fb0">
+        </div>
+        <div class="bgOption custom" data-type="upload" id="uploadOption" title="رفع صورة أو فيديو">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14" stroke-linecap="round"/></svg>
+        </div>
+        <input type="file" id="bgFileInput" accept="image/*,video/*">
+      </div>
+    </div>
+  </div>
+
+  <!-- شريط سفلي -->
+  <div id="bottomBar" style="display:none;">
+    <div class="sideBtn" id="bgToggleBtn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="9" r="1.8" fill="currentColor" stroke="none"/><path d="M21 16l-5-5L5 21" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>الخلفية</span>
+    </div>
+    <div id="recordBtn"><div class="inner"></div></div>
+    <div class="sideBtn" id="qualityBtn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="6" width="14" height="12" rx="2"/><path d="M22 9l-6 3 6 3V9z" stroke-linejoin="round"/></svg>
+      <span id="qualityLabel">HD</span>
+    </div>
+  </div>
+
+  <!-- شاشة المعاينة -->
+  <div id="previewScreen">
+    <div id="previewTop">
+      <div class="pill" style="display:inline-flex;">جاهز للحفظ</div>
+    </div>
+    <video id="previewVideo" playsinline controls></video>
+    <div id="previewBar">
+      <button class="bigBtn ghost" id="discardBtn">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" stroke-linecap="round"/></svg>
+        حذف وإعادة التصوير
+      </button>
+      <button class="bigBtn primary" id="saveBtn">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#04140d" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        حفظ في المعرض
+      </button>
+    </div>
+  </div>
+
+  <div id="saveToast">تم الحفظ في المعرض بنجاح ✓</div>
+
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation/selfie_segmentation.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation/selfie_segmentation.js" crossorigin="anonymous"></script>
 <script>
 (function(){
-  const srcVideo = document.getElementById('srcVideo');
-  const outputCanvas = document.getElementById('outputCanvas');
-  const ctx = outputCanvas.getContext('2d', { willReadFrequently:true });
-  const statusDot = document.getElementById('statusDot');
-  const statusText = document.getElementById('statusText');
-  const loadingOverlay = document.getElementById('loadingOverlay');
+  "use strict";
+
+  // ===== عناصر =====
+  const startScreen = document.getElementById('startScreen');
+  const startBtn = document.getElementById('startBtn');
   const permError = document.getElementById('permError');
-  const permErrorText = document.getElementById('permErrorText');
+  const modelLoading = document.getElementById('modelLoading');
+  const stage = document.getElementById('stage');
+  const topBar = document.getElementById('topBar');
+  const bottomBar = document.getElementById('bottomBar');
+  const sourceVideo = document.getElementById('sourceVideo');
+  const outputCanvas = document.getElementById('outputCanvas');
+  const ctx = outputCanvas.getContext('2d', { willReadFrequently:false });
   const recordBtn = document.getElementById('recordBtn');
-  const mirrorBtn = document.getElementById('mirrorBtn');
+  const recDot = document.getElementById('recDot');
+  const timerEl = document.getElementById('timer');
   const switchCamBtn = document.getElementById('switchCamBtn');
+  const micBtn = document.getElementById('micBtn');
+  const bgToggleBtn = document.getElementById('bgToggleBtn');
+  const bgPanel = document.getElementById('bgPanel');
+  const bgRow = document.getElementById('bgRow');
+  const colorPicker = document.getElementById('colorPicker');
+  const colorOption = document.getElementById('colorOption');
+  const uploadOption = document.getElementById('uploadOption');
+  const bgFileInput = document.getElementById('bgFileInput');
   const qualityBtn = document.getElementById('qualityBtn');
-  const downloadToast = document.getElementById('downloadToast');
-  const downloadLink = document.getElementById('downloadLink');
-  const closeToast = document.getElementById('closeToast');
+  const qualityLabel = document.getElementById('qualityLabel');
+  const previewScreen = document.getElementById('previewScreen');
+  const previewVideo = document.getElementById('previewVideo');
+  const discardBtn = document.getElementById('discardBtn');
+  const saveBtn = document.getElementById('saveBtn');
+  const saveToast = document.getElementById('saveToast');
 
-  let currentStream = null;
-  let facingMode = 'user'; // 'user' = front, 'environment' = back
-  let mirrored = true; // default mirror for front camera selfie feel
-  let bgMode = 'black';
-  let segmentation = null;
-  let isModelReady = false;
-  let mediaRecorder = null;
+  // ===== حالة =====
+  let stream = null;
+  let facingMode = 'user';
+  let micOn = true;
+  let segmenter = null;
+  let bgMode = 'green'; // green | blue | color | upload
+  let bgColor = '#00ff6a';
+  let bgMediaEl = null; // <img> أو <video> للخلفية المرفوعة
+  let isUploadVideo = false;
+  let recorder = null;
   let recordedChunks = [];
-  let isRecording = false;
-  let lastSegMask = null;
-  let highQuality = true; // true = better model, false = faster
+  let recording = false;
+  let recordStartTime = 0;
+  let timerInterval = null;
+  let qualityHigh = true; // HD / FHD toggle بسيط
+  let canvasStream = null;
+  let lastVideoTrack = null;
   let rafId = null;
+  let segmentationResults = null;
+  let offW = 0, offH = 0;
 
-  const bgColors = {
-    black: '#000000',
-    green: '#00ff3c',
-    blue: '#0033ff',
-    white: '#ffffff'
-  };
+  // قماش مؤقت لرسم القناع
+  const maskCanvas = document.createElement('canvas');
+  const maskCtx = maskCanvas.getContext('2d', { willReadFrequently:true });
 
-  function setStatus(text, ready){
-    statusText.textContent = text;
-    statusDot.classList.toggle('ready', !!ready);
-  }
+  // ===== تحسين جودة العزل: تنعيم حواف + ثبات زمني =====
+  const FEATHER_BLUR_PX = 3.5;      // تنعيم حواف القناع لتقليل التشويش الخشن
+  const TEMPORAL_SMOOTH = 0.55;     // 0=بدون ثبات، 1=ثبات كامل (أبطأ استجابة)
+  let smoothMaskData = null;        // بيانات القناع الممزوجة عبر الزمن
+  let smoothCanvas = document.createElement('canvas');
+  let smoothCtx = smoothCanvas.getContext('2d', { willReadFrequently:true });
+  let mirrorFront = true; // عكس أفقي تلقائي عند استخدام الكاميرا الأمامية
 
-  // ---------- Camera setup ----------
-  async function startCamera(){
-    if(currentStream){
-      currentStream.getTracks().forEach(t=>t.stop());
-    }
-    try{
-      const constraints = {
-        audio: true,
-        video: {
-          facingMode: facingMode,
-          width: { ideal: 1280 },
-          height: { ideal: 720 }
-        }
-      };
-      const stream = await navigator.mediaDevices.getUserMedia(constraints);
-      currentStream = stream;
-      srcVideo.srcObject = stream;
-      await srcVideo.play();
-      permError.classList.add('hidden');
-      resizeCanvas();
-    }catch(err){
+  // ===== بدء الكاميرا =====
+  startBtn.addEventListener('click', async () => {
+    startBtn.disabled = true;
+    permError.style.display = 'none';
+    try {
+      await initCamera();
+      startScreen.style.display = 'none';
+      modelLoading.style.display = 'flex';
+      await initSegmenter();
+      modelLoading.style.display = 'none';
+      stage.style.display = 'block';
+      topBar.style.display = 'flex';
+      bottomBar.style.display = 'flex';
+      startRenderLoop();
+    } catch (err) {
       console.error(err);
-      permErrorText.textContent = 'تعذّر الوصول إلى الكاميرا: ' + (err.message || err.name) + ' — تأكد من السماح بإذن الكاميرا والميكروفون، ومن استخدام HTTPS.';
-      permError.classList.remove('hidden');
+      permError.textContent = 'تعذر الوصول إلى الكاميرا: ' + (err.message || 'تحقق من الأذونات');
+      permError.style.display = 'block';
+      startBtn.disabled = false;
     }
+  });
+
+  async function initCamera(){
+    if (stream){ stream.getTracks().forEach(t=>t.stop()); }
+    const constraints = {
+      audio: true,
+      video: {
+        facingMode: facingMode,
+        width: { ideal: qualityHigh ? 1280 : 854 },
+        height: { ideal: qualityHigh ? 720 : 480 },
+        frameRate: { ideal: 30, max: 30 }
+      }
+    };
+    stream = await navigator.mediaDevices.getUserMedia(constraints);
+    sourceVideo.srcObject = stream;
+    await new Promise(res => { sourceVideo.onloadedmetadata = () => { sourceVideo.play(); res(); }; });
+    lastVideoTrack = stream.getVideoTracks()[0];
+    offW = sourceVideo.videoWidth;
+    offH = sourceVideo.videoHeight;
+    outputCanvas.width = offW;
+    outputCanvas.height = offH;
+    maskCanvas.width = offW;
+    maskCanvas.height = offH;
+    smoothCanvas.width = offW;
+    smoothCanvas.height = offH;
+    smoothMaskData = null; // أعد ضبط الثبات الزمني عند تغيير الكاميرا
+    mirrorFront = (facingMode === 'user'); // اعكس فقط للكاميرا الأمامية، مثل أي مرآة طبيعية
   }
 
-  function resizeCanvas(){
-    outputCanvas.width = outputCanvas.clientWidth * window.devicePixelRatio;
-    outputCanvas.height = outputCanvas.clientHeight * window.devicePixelRatio;
-  }
-  window.addEventListener('resize', resizeCanvas);
-
-  // ---------- Selfie Segmentation (MediaPipe) ----------
-  function initSegmentation(){
-    segmentation = new SelfieSegmentation({
-      locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation/${file}`
+  async function initSegmenter(){
+    return new Promise((resolve) => {
+      segmenter = new SelfieSegmentation({
+        locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation/${file}`
+      });
+      segmenter.setOptions({ modelSelection: 1 }); // 1 = landscape, أدق وأنسب للهواتف
+      segmenter.onResults((results) => { segmentationResults = results; });
+      resolve();
     });
-    segmentation.setOptions({ modelSelection: highQuality ? 1 : 0 });
-    segmentation.onResults(onSegResults);
   }
 
-  function onSegResults(results){
-    lastSegMask = results.segmentationMask;
-  }
-
-  async function processFrame(){
-    if(srcVideo.readyState >= 2 && isModelReady){
-      try{
-        await segmentation.send({image: srcVideo});
-      }catch(e){ /* ignore transient errors */ }
+  // ===== حلقة الرسم الرئيسية =====
+  async function startRenderLoop(){
+    async function frame(){
+      if (sourceVideo.readyState >= 2 && segmenter){
+        try { await segmenter.send({ image: sourceVideo }); } catch(e){}
+      }
+      drawComposite();
+      rafId = requestAnimationFrame(frame);
     }
-    drawComposite();
-    rafId = requestAnimationFrame(processFrame);
+    frame();
   }
 
   function drawComposite(){
-    const w = outputCanvas.width, h = outputCanvas.height;
-    if(w === 0 || h === 0) return;
-
-    ctx.save();
-    if(mirrored){
-      ctx.translate(w,0);
-      ctx.scale(-1,1);
+    if (!segmentationResults){
+      ctx.save();
+      if (mirrorFront){ ctx.translate(offW,0); ctx.scale(-1,1); }
+      ctx.drawImage(sourceVideo, 0, 0, offW, offH);
+      ctx.restore();
+      return;
     }
 
-    // fill solid background
-    ctx.fillStyle = bgColors[bgMode];
-    ctx.fillRect(0,0,w,h);
+    // 1. ارسم القناع الخام في canvas مؤقت
+    maskCtx.clearRect(0,0,offW,offH);
+    maskCtx.filter = `blur(${FEATHER_BLUR_PX}px)`; // تنعيم الحواف يقلل التشويش الخشن/المسنن
+    maskCtx.drawImage(segmentationResults.segmentationMask, 0, 0, offW, offH);
+    maskCtx.filter = 'none';
 
-    if(lastSegMask){
-      // draw mask, then draw video clipped to mask using destination-in style composite
-      // approach: draw mask scaled to canvas, use it as alpha via offscreen canvas
-      drawMaskedVideo(w,h);
-    } else if(srcVideo.readyState >= 2){
-      drawCoverVideo(srcVideo, w, h);
+    // 2. الثبات الزمني: امزج القناع الحالي مع المتوسط المتراكم لتقليل الرجفة بين الفريمات
+    const rawData = maskCtx.getImageData(0,0,offW,offH);
+    if (!smoothMaskData){
+      smoothMaskData = new Float32Array(rawData.data.length);
+      for (let i=0;i<rawData.data.length;i++) smoothMaskData[i] = rawData.data[i];
+    } else {
+      const a = TEMPORAL_SMOOTH, b = 1-a;
+      for (let i=0;i<rawData.data.length;i+=4){
+        // فقط قناة الشفافية/السطوع تهمنا (القناع رمادي/ألفا)
+        smoothMaskData[i]   = smoothMaskData[i]*a   + rawData.data[i]*b;
+        smoothMaskData[i+1] = smoothMaskData[i+1]*a + rawData.data[i+1]*b;
+        smoothMaskData[i+2] = smoothMaskData[i+2]*a + rawData.data[i+2]*b;
+        smoothMaskData[i+3] = smoothMaskData[i+3]*a + rawData.data[i+3]*b;
+      }
     }
+    const outData = smoothCtx.createImageData(offW, offH);
+    for (let i=0;i<smoothMaskData.length;i++) outData.data[i] = smoothMaskData[i];
+    smoothCtx.putImageData(outData, 0, 0);
 
-    ctx.restore();
+    // 3. ارسم الخلفية الجديدة بالكامل على الـ canvas الرئيسي
+    drawBackground();
+
+    // 4. استخدم القناع الممزوج لقص الشخص ولصقه فوق الخلفية، مع تطبيق نفس الاتجاه الصحيح
+    const personLayer = drawComposite._personLayer || (drawComposite._personLayer = document.createElement('canvas'));
+    personLayer.width = offW; personLayer.height = offH;
+    const pctx = personLayer.getContext('2d');
+    pctx.clearRect(0,0,offW,offH);
+    pctx.save();
+    if (mirrorFront){ pctx.translate(offW,0); pctx.scale(-1,1); }
+    pctx.drawImage(sourceVideo, 0, 0, offW, offH);
+    pctx.restore();
+    pctx.globalCompositeOperation = 'destination-in';
+    if (mirrorFront){
+      pctx.save();
+      pctx.translate(offW,0); pctx.scale(-1,1);
+      pctx.drawImage(smoothCanvas, 0, 0, offW, offH);
+      pctx.restore();
+    } else {
+      pctx.drawImage(smoothCanvas, 0, 0, offW, offH);
+    }
+    pctx.globalCompositeOperation = 'source-over';
+
+    ctx.drawImage(personLayer, 0, 0, offW, offH);
   }
 
-  let off = document.createElement('canvas');
-  let offCtx = off.getContext('2d');
-
-  function drawCoverVideo(video, w, h){
-    const vw = video.videoWidth, vh = video.videoHeight;
-    if(!vw || !vh) return;
-    const scale = Math.max(w/vw, h/vh);
-    const dw = vw*scale, dh = vh*scale;
-    const dx = (w-dw)/2, dy = (h-dh)/2;
-    ctx.drawImage(video, dx, dy, dw, dh);
+  function drawBackground(){
+    if (bgMode === 'color' || bgMode === 'green' || bgMode === 'blue'){
+      ctx.fillStyle = bgColor;
+      ctx.fillRect(0,0,offW,offH);
+    } else if (bgMode === 'upload' && bgMediaEl){
+      try{
+        // تغطية كاملة (object-fit: cover) للخلفية المرفوعة
+        const mediaW = isUploadVideo ? bgMediaEl.videoWidth : bgMediaEl.naturalWidth;
+        const mediaH = isUploadVideo ? bgMediaEl.videoHeight : bgMediaEl.naturalHeight;
+        if (mediaW && mediaH){
+          const scale = Math.max(offW/mediaW, offH/mediaH);
+          const dw = mediaW*scale, dh = mediaH*scale;
+          const dx = (offW-dw)/2, dy = (offH-dh)/2;
+          ctx.drawImage(bgMediaEl, dx, dy, dw, dh);
+        } else {
+          ctx.fillStyle = '#000'; ctx.fillRect(0,0,offW,offH);
+        }
+      } catch(e){
+        ctx.fillStyle = '#000'; ctx.fillRect(0,0,offW,offH);
+      }
+    } else {
+      ctx.fillStyle = '#000';
+      ctx.fillRect(0,0,offW,offH);
+    }
   }
 
-  function drawMaskedVideo(w,h){
-    off.width = w; off.height = h;
-    // draw video cover into offscreen
-    offCtx.save();
-    offCtx.clearRect(0,0,w,h);
-    const vw = srcVideo.videoWidth, vh = srcVideo.videoHeight;
-    if(!vw || !vh){ offCtx.restore(); return; }
-    const scale = Math.max(w/vw, h/vh);
-    const dw = vw*scale, dh = vh*scale;
-    const dx=(w-dw)/2, dy=(h-dh)/2;
-    offCtx.drawImage(srcVideo, dx, dy, dw, dh);
+  // ===== اختيار الخلفية =====
+  bgToggleBtn.addEventListener('click', () => bgPanel.classList.toggle('open'));
 
-    // now apply mask: draw mask scaled same way, use as destination-in
-    offCtx.globalCompositeOperation = 'destination-in';
-    offCtx.drawImage(lastSegMask, dx, dy, dw, dh);
-    offCtx.globalCompositeOperation = 'source-over';
-    offCtx.restore();
+  bgRow.addEventListener('click', (e) => {
+    const opt = e.target.closest('.bgOption');
+    if (!opt) return;
+    const type = opt.dataset.type;
+    if (type === 'upload'){ bgFileInput.click(); return; }
+    if (type === 'color'){ colorPicker.click(); return; }
 
-    ctx.drawImage(off, 0, 0, w, h);
-  }
-
-  // ---------- UI events ----------
-  document.querySelectorAll('.bgChoice').forEach(el=>{
-    el.addEventListener('click', ()=>{
-      document.querySelectorAll('.bgChoice').forEach(b=>b.classList.remove('active'));
-      el.classList.add('active');
-      bgMode = el.dataset.bg;
-    });
+    document.querySelectorAll('.bgOption').forEach(o=>o.classList.remove('active'));
+    opt.classList.add('active');
+    bgMode = type;
+    if (type === 'green') bgColor = '#00ff6a';
+    if (type === 'blue') bgColor = '#0066ff';
   });
 
-  mirrorBtn.addEventListener('click', ()=>{
-    mirrored = !mirrored;
-    mirrorBtn.classList.toggle('on', mirrored);
-  });
-  mirrorBtn.classList.add('on');
-
-  switchCamBtn.addEventListener('click', async ()=>{
-    facingMode = (facingMode === 'user') ? 'environment' : 'user';
-    setStatus('جاري تبديل الكاميرا...', false);
-    await startCamera();
-    setStatus('جاهز', true);
+  colorPicker.addEventListener('input', (e) => {
+    bgColor = e.target.value;
+    bgMode = 'color';
+    document.querySelectorAll('.bgOption').forEach(o=>o.classList.remove('active'));
+    colorOption.classList.add('active');
+    colorOption.style.background = bgColor;
   });
 
-  qualityBtn.addEventListener('click', ()=>{
-    highQuality = !highQuality;
-    qualityBtn.classList.toggle('on', highQuality);
-    if(segmentation){ segmentation.setOptions({ modelSelection: highQuality ? 1 : 0 }); }
-    setStatus(highQuality ? 'جودة عزل عالية' : 'جودة عزل سريعة', true);
+  bgFileInput.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const url = URL.createObjectURL(file);
+    isUploadVideo = file.type.startsWith('video');
+    if (isUploadVideo){
+      const v = document.createElement('video');
+      v.src = url; v.loop = true; v.muted = true; v.playsInline = true; v.autoplay = true;
+      v.play();
+      bgMediaEl = v;
+    } else {
+      const img = new Image();
+      img.src = url;
+      bgMediaEl = img;
+    }
+    bgMode = 'upload';
+    document.querySelectorAll('.bgOption').forEach(o=>o.classList.remove('active'));
+    uploadOption.classList.add('active');
+    uploadOption.style.background = `url(${url}) center/cover`;
   });
-  qualityBtn.classList.add('on');
 
-  document.getElementById('retryBtn').addEventListener('click', startCamera);
+  // ===== تبديل الكاميرا =====
+  switchCamBtn.addEventListener('click', async () => {
+    facingMode = facingMode === 'user' ? 'environment' : 'user';
+    try { await initCamera(); } catch(e){ console.error(e); }
+  });
 
-  // ---------- Recording ----------
-  recordBtn.addEventListener('click', ()=>{
-    if(!isRecording){ startRecording(); } else { stopRecording(); }
+  // ===== كتم الصوت =====
+  micBtn.addEventListener('click', () => {
+    micOn = !micOn;
+    if (stream){
+      stream.getAudioTracks().forEach(t => t.enabled = micOn);
+    }
+    micBtn.style.opacity = micOn ? '1' : '0.45';
+  });
+
+  // ===== جودة التصوير =====
+  qualityBtn.addEventListener('click', async () => {
+    qualityHigh = !qualityHigh;
+    qualityLabel.textContent = qualityHigh ? 'HD' : 'SD';
+    try { await initCamera(); } catch(e){ console.error(e); }
+  });
+
+  // ===== التسجيل =====
+  recordBtn.addEventListener('click', () => {
+    if (!recording) startRecording(); else stopRecording();
   });
 
   function startRecording(){
     recordedChunks = [];
-    const canvasStream = outputCanvas.captureStream(30);
-    // add audio from mic
-    let combinedStream = canvasStream;
-    if(currentStream){
-      const audioTracks = currentStream.getAudioTracks();
-      if(audioTracks.length){
-        combinedStream = new MediaStream([...canvasStream.getVideoTracks(), ...audioTracks]);
-      }
+    canvasStream = outputCanvas.captureStream(30);
+    // أضف مسار الصوت من الكاميرا الأصلية
+    if (stream){
+      stream.getAudioTracks().forEach(track => canvasStream.addTrack(track));
     }
-    let mimeType = 'video/webm;codecs=vp9';
-    if(!MediaRecorder.isTypeSupported(mimeType)){
-      mimeType = 'video/webm;codecs=vp8';
-      if(!MediaRecorder.isTypeSupported(mimeType)) mimeType = 'video/webm';
-    }
-    try{
-      mediaRecorder = new MediaRecorder(combinedStream, { mimeType });
-    }catch(e){
-      mediaRecorder = new MediaRecorder(combinedStream);
-    }
-    mediaRecorder.ondataavailable = (e)=>{ if(e.data && e.data.size>0) recordedChunks.push(e.data); };
-    mediaRecorder.onstop = onRecordingStop;
-    mediaRecorder.start();
-    isRecording = true;
+    let mimeType = 'video/webm;codecs=vp9,opus';
+    if (!MediaRecorder.isTypeSupported(mimeType)) mimeType = 'video/webm;codecs=vp8,opus';
+    if (!MediaRecorder.isTypeSupported(mimeType)) mimeType = 'video/webm';
+
+    recorder = new MediaRecorder(canvasStream, { mimeType, videoBitsPerSecond: 5_000_000 });
+    recorder.ondataavailable = (e) => { if (e.data && e.data.size > 0) recordedChunks.push(e.data); };
+    recorder.onstop = onRecordingStop;
+    recorder.start();
+
+    recording = true;
     recordBtn.classList.add('recording');
-    setStatus('جاري التسجيل...', true);
-    statusDot.classList.add('rec');
+    recDot.classList.add('live');
+    recordStartTime = Date.now();
+    timerInterval = setInterval(updateTimer, 250);
   }
 
   function stopRecording(){
-    if(mediaRecorder && isRecording){
-      mediaRecorder.stop();
-      isRecording = false;
-      recordBtn.classList.remove('recording');
-      statusDot.classList.remove('rec');
-      setStatus('جاهز', true);
-    }
+    if (recorder && recorder.state !== 'inactive') recorder.stop();
+    recording = false;
+    recordBtn.classList.remove('recording');
+    recDot.classList.remove('live');
+    clearInterval(timerInterval);
+    timerEl.textContent = '00:00';
+  }
+
+  function updateTimer(){
+    const elapsed = Math.floor((Date.now() - recordStartTime)/1000);
+    const m = String(Math.floor(elapsed/60)).padStart(2,'0');
+    const s = String(elapsed%60).padStart(2,'0');
+    timerEl.textContent = `${m}:${s}`;
   }
 
   function onRecordingStop(){
     const blob = new Blob(recordedChunks, { type: 'video/webm' });
     const url = URL.createObjectURL(blob);
-    downloadLink.href = url;
-    const ts = new Date().toISOString().replace(/[:.]/g,'-');
-    downloadLink.download = `green-screen-${ts}.webm`;
-    downloadToast.style.display = 'block';
-
-    // Try native share sheet (works well on mobile to "save to Photos")
-    if(navigator.canShare && navigator.canShare({ files:[new File([blob], 'video.webm', {type:'video/webm'})] })){
-      downloadLink.textContent = 'مشاركة / حفظ في المعرض';
-      downloadLink.onclick = async (e)=>{
-        e.preventDefault();
-        try{
-          await navigator.share({
-            files:[new File([blob], `green-screen-${ts}.webm`, {type:'video/webm'})],
-            title:'فيديو الكروما'
-          });
-        }catch(err){
-          // fallback to normal download
-          const a = document.createElement('a');
-          a.href = url; a.download = `green-screen-${ts}.webm`; a.click();
-        }
-      };
-    }
+    previewVideo.src = url;
+    previewScreen.style.display = 'flex';
+    previewVideo.play();
+    if (rafId) cancelAnimationFrame(rafId);
   }
 
-  closeToast.addEventListener('click', ()=>{
-    downloadToast.style.display = 'none';
+  // ===== شاشة المعاينة =====
+  discardBtn.addEventListener('click', () => {
+    previewScreen.style.display = 'none';
+    URL.revokeObjectURL(previewVideo.src);
+    previewVideo.src = '';
+    startRenderLoop();
   });
 
-  // ---------- Boot ----------
-  async function boot(){
-    setStatus('جاري تجهيز الكاميرا...', false);
-    await startCamera();
-    setStatus('جاري تحميل نموذج العزل...', false);
-    initSegmentation();
-    // wait a tick for the wasm/model to actually be usable
-    await new Promise(r=>setTimeout(r, 800));
-    isModelReady = true;
-    loadingOverlay.classList.add('hidden');
-    setStatus('جاهز', true);
-    processFrame();
+  saveBtn.addEventListener('click', async () => {
+    const blob = new Blob(recordedChunks, { type: 'video/webm' });
+    const fileName = `green_studio_${Date.now()}.webm`;
+
+    // محاولة استخدام Web Share API (الأفضل لحفظ الفيديو في المعرض على الهاتف)
+    try {
+      const file = new File([blob], fileName, { type: 'video/webm' });
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        await navigator.share({ files: [file], title: 'فيديو الاستوديو' });
+        showToast('شارك أو احفظ الفيديو من القائمة التي ظهرت');
+        return;
+      }
+    } catch(e){ /* المستخدم ألغى المشاركة أو غير مدعومة - استخدم التنزيل العادي */ }
+
+    // تنزيل عادي كحل بديل (يذهب لمجلد التنزيلات ومنه يمكن نقله للمعرض)
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = fileName;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    showToast('تم تنزيل الفيديو ✓ يمكنك إيجاده في ملفات التنزيلات');
+  });
+
+  function showToast(msg){
+    saveToast.textContent = msg;
+    saveToast.classList.add('show');
+    setTimeout(()=> saveToast.classList.remove('show'), 3200);
   }
 
-  boot();
 })();
 </script>
 </body>
