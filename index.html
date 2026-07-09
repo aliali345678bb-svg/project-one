@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>براق الفضاء للإنتـرنت الاسلكي</title>
+    <title>براق الفضاء للإنترنت اللاسلكي</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -17,367 +17,312 @@
         }
 
         body {
-            background: #050515;
+            background: #03030d;
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 15px;
+            padding: 10px;
             overflow: hidden;
             position: relative;
         }
 
-        /* خلفية فضاء ديناميكية متحركة بالكامل */
+        /* خلفية الفضاء باستخدام تدرج ألوان فخم فائق الخفة (بدون صور) */
         .space-bg {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle at 50% 30%, rgba(88, 57, 212, 0.2) 0%, rgba(5, 5, 20, 1) 80%);
+            background: radial-gradient(circle at 50% 25%, #120f30 0%, #03030d 80%);
             z-index: 0;
-            overflow: hidden;
         }
 
-        .star {
+        /* تأثير النجوم النيون الخفيفة باستعمال CSS لضمان عدم استهلاك البطارية أو المعالج */
+        .stars {
             position: absolute;
-            background: #fff;
-            border-radius: 50%;
-            opacity: 0.6;
-            animation: floatStars 20s linear infinite;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(white, rgba(255,255,255,.2) 1px, transparent 20px),
+                radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 30px);
+            background-size: 250px 250px, 150px 150px;
+            background-position: 0 0, 40px 60px;
+            opacity: 0.25;
+            z-index: 0;
         }
 
-        @keyframes floatStars {
-            0% { transform: translateY(100vh) scale(0.5); opacity: 0; }
-            50% { opacity: 0.8; }
-            100% { transform: translateY(-10vh) scale(1.2); opacity: 0; }
-        }
-
-        /* الحاوية الرئيسية للموبايل بتأثير زجاجي مطور */
+        /* حاوية الهاتف المحمولة فائقة الاستجابة والنعومة */
         .phone-wrapper {
             width: 100%;
-            max-width: 410px;
-            background: linear-gradient(180deg, rgba(22, 26, 66, 0.75) 0%, rgba(10, 11, 32, 0.96) 100%);
-            backdrop-filter: blur(30px);
-            -webkit-backdrop-filter: blur(30px);
-            border: 2px solid rgba(255, 215, 0, 0.25);
-            border-radius: 40px;
-            padding: 30px 20px;
-            box-shadow: 0 30px 70px rgba(0, 0, 0, 0.9), 
-                        0 0 40px rgba(138, 43, 226, 0.25);
+            max-width: 390px;
+            background: linear-gradient(180deg, rgba(20, 22, 54, 0.8) 0%, rgba(8, 9, 24, 0.98) 100%);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1.5px solid rgba(255, 215, 0, 0.2);
+            border-radius: 35px;
+            padding: 25px 18px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 30px rgba(106, 90, 205, 0.2);
             z-index: 1;
             position: relative;
             text-align: center;
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        /* اللوجو الدائري المشع مع أنيميشن الدوران الخفيف للرينج */
+        /* اللوجو الدائري المشع والمبسط */
         .logo-container {
             position: relative;
-            width: 135px;
-            height: 135px;
+            width: 120px;
+            height: 120px;
             margin: 0 auto 15px auto;
         }
 
         .logo-circle {
             width: 100%;
             height: 100%;
-            background: radial-gradient(circle, rgba(16, 18, 58, 0.95) 0%, rgba(33, 38, 91, 0.9) 100%);
+            background: radial-gradient(circle, #0e1132 0%, #171a47 100%);
             border: 2px solid rgba(255, 215, 0, 0.4);
             border-radius: 50%;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            box-shadow: 0 0 35px rgba(138, 43, 226, 0.7), inset 0 0 20px rgba(0, 255, 255, 0.2);
-            transition: all 0.5s ease;
+            box-shadow: 0 0 25px rgba(138, 43, 226, 0.6);
+            transition: all 0.4s ease;
         }
 
         .logo-ring {
             position: absolute;
             top: 50%; left: 50%;
-            width: 155px;
-            height: 52px;
-            border: 2px solid rgba(255, 215, 0, 0.6);
+            width: 138px;
+            height: 46px;
+            border: 2px solid rgba(255, 215, 0, 0.5);
             border-radius: 50%;
             transform: translate(-50%, -50%) rotate(-15deg);
-            box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
             pointer-events: none;
-            animation: orbit 8s linear infinite;
-        }
-
-        @keyframes orbit {
-            0% { transform: translate(-50%, -50%) rotate(-15deg); }
-            100% { transform: translate(-50%, -50%) rotate(345deg); }
         }
 
         .logo-circle img {
-            width: 65px;
-            height: 65px;
-            filter: drop-shadow(0 0 12px rgba(0, 255, 255, 0.9));
+            width: 55px;
+            height: 55px;
+            filter: drop-shadow(0 0 8px rgba(0, 255, 255, 0.8));
         }
 
         .logo-circle .brand-name {
-            font-size: 1.1rem;
+            font-size: 1rem;
             font-weight: 900;
             color: #ffffff;
-            text-shadow: 0 0 8px rgba(255, 215, 0, 0.8);
-            margin-top: -3px;
+            text-shadow: 0 0 5px rgba(255, 215, 0, 0.8);
+            margin-top: -2px;
         }
 
         h1 {
             color: #ffffff;
-            font-size: 1.5rem;
+            font-size: 1.35rem;
             font-weight: 700;
-            margin-bottom: 5px;
-            transition: 0.3s;
+            margin-bottom: 4px;
         }
 
         .subtitle {
-            color: #a4a9cf;
-            font-size: 0.95rem;
-            margin-bottom: 25px;
-            transition: 0.3s;
+            color: #9296be;
+            font-size: 0.88rem;
+            margin-bottom: 20px;
         }
 
-        /* تأثيرات الأنميشن لتبديل النوافذ وسحب الكروت */
+        /* لوحات العرض المانعة للتأخير */
         .window-pane {
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            opacity: 1;
-            transform: scale(1);
+            transition: opacity 0.3s ease, transform 0.3s ease;
         }
 
         .window-pane.hide {
             opacity: 0;
-            transform: scale(0.8) translateY(-30px);
+            transform: scale(0.95) translateY(-10px);
             display: none !important;
         }
 
-        .window-pane.show {
-            animation: paneReveal 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.25) forwards;
-        }
-
-        @keyframes paneReveal {
-            from { opacity: 0; transform: scale(0.8) translateY(30px); }
-            to { opacity: 1; transform: scale(1) translateY(0); }
-        }
-
-        /* صندوق مدخلات تسجيل الدخول والأنيميشن الحركي للفوكس */
+        /* كارد تسجيل الدخول البيضاوي */
         .login-card {
-            background: rgba(14, 16, 46, 0.65);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 25px;
-            padding: 25px 20px;
-            margin-bottom: 25px;
-            box-shadow: inset 0 0 20px rgba(255,255,255,0.01);
+            background: rgba(10, 11, 32, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 22px;
+            padding: 20px 15px;
+            margin-bottom: 20px;
         }
 
         .input-wrapper {
             position: relative;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
         }
 
         .input-wrapper input {
             width: 100%;
-            padding: 15px 25px 15px 50px;
-            background: rgba(8, 9, 26, 0.85);
-            border: 2px solid rgba(212, 175, 55, 0.35);
+            padding: 13px 20px 13px 45px;
+            background: #060718;
+            border: 1.5px solid rgba(212, 175, 55, 0.4);
             border-radius: 50px;
             color: #ffffff;
-            font-size: 1rem;
+            font-size: 0.9rem;
             outline: none;
             text-align: right;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.25s ease;
         }
 
         .input-wrapper input:focus {
             border-color: #ffd700;
-            box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
-            background: rgba(18, 20, 56, 0.95);
-            transform: scale(1.02);
+            box-shadow: 0 0 12px rgba(255, 215, 0, 0.3);
         }
 
         .input-wrapper i {
             position: absolute;
-            left: 20px;
+            left: 18px;
             top: 50%;
             transform: translateY(-50%);
             color: #ffd700;
-            font-size: 1.1rem;
-            transition: 0.3s;
+            font-size: 1rem;
         }
 
-        .input-wrapper input:focus + i {
-            transform: translateY(-50%) scale(1.2);
-            color: #fff;
-            filter: drop-shadow(0 0 5px #ffd700);
-        }
-
-        /* زر تسجيل الدخول */
         .login-btn {
             width: 100%;
-            padding: 15px;
+            padding: 13px;
             background: linear-gradient(45deg, #aa7c11, #f3e5ab, #aa7c11);
-            background-size: 200% auto;
             border: none;
             border-radius: 50px;
-            color: #050512;
-            font-size: 1.15rem;
+            color: #03030d;
+            font-size: 1.05rem;
             font-weight: 900;
             cursor: pointer;
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 10px;
-            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.35);
-            transition: all 0.3s;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+            transition: transform 0.2s, box-shadow 0.2s;
         }
 
-        .login-btn:hover {
-            background-position: right center;
-            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.6);
-            transform: translateY(-2px);
+        .login-btn:active {
+            transform: scale(0.98);
         }
 
-        /* ------------------------------------------- */
-        /* شاشة نجاح الاتصال المذهلة (تطابق الصورة الثانية) */
-        /* ------------------------------------------- */
+        /* شاشة نجاح الاتصال فائقة الأناقة (تطابق الهوية الفضائية) */
         .success-card {
-            background: rgba(14, 16, 46, 0.7);
-            border: 1.5px solid rgba(0, 255, 200, 0.25);
-            border-radius: 25px;
-            padding: 25px 20px;
-            margin-bottom: 25px;
-            box-shadow: 0 0 30px rgba(0, 255, 200, 0.1);
+            background: rgba(10, 12, 36, 0.6);
+            border: 1.5px solid rgba(0, 255, 200, 0.3);
+            border-radius: 22px;
+            padding: 20px 15px;
+            margin-bottom: 20px;
+            animation: fadeIn 0.4s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
         }
 
         .success-icon-glow {
-            width: 70px;
-            height: 70px;
+            width: 55px;
+            height: 55px;
             background: #00ffc8;
             border-radius: 50%;
-            margin: 0 auto 15px auto;
+            margin: 0 auto 12px auto;
             display: flex;
             justify-content: center;
             align-items: center;
-            box-shadow: 0 0 25px #00ffc8;
-            animation: bounceIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.2) forwards;
-        }
-
-        @keyframes bounceIn {
-            0% { transform: scale(0); }
-            70% { transform: scale(1.2); }
-            100% { transform: scale(1); }
+            box-shadow: 0 0 15px #00ffc8;
         }
 
         .success-icon-glow i {
-            color: #050515;
-            font-size: 2rem;
+            color: #03030d;
+            font-size: 1.5rem;
         }
 
         .success-title {
-            color: #00ffc8 !important;
-            font-size: 1.4rem !important;
+            color: #00ffc8;
+            font-size: 1.2rem;
             font-weight: 800;
-            margin-bottom: 15px;
-            text-shadow: 0 0 10px rgba(0,255,200,0.3);
+            margin-bottom: 12px;
         }
 
-        /* تفاصيل رصيد وسرعة الكرت */
         .info-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 12px 10px;
+            padding: 10px 8px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
         .info-row:last-child { border: none; }
 
         .info-label {
-            color: #8c92bd;
-            font-size: 0.95rem;
+            color: #8388b4;
+            font-size: 0.88rem;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
         }
         .info-label i { color: #00ffc8; }
-
-        .info-value {
-            color: #ffffff;
-            font-weight: 700;
-            font-size: 0.95rem;
-        }
+        .info-value { color: #ffffff; font-weight: 700; font-size: 0.88rem; }
         .info-value.highlight { color: #00ffc8; }
 
-        /* ------------------------------------------- */
         /* منطقة الأزرار الدائرية التفاعلية */
-        /* ------------------------------------------- */
         .features-row {
             display: flex;
             justify-content: space-around;
-            gap: 10px;
-            margin-bottom: 20px;
+            gap: 8px;
+            margin-bottom: 15px;
             position: relative;
         }
 
         .feature-bubble {
             flex: 1;
             aspect-ratio: 1 / 1;
-            max-width: 90px;
-            background: radial-gradient(circle at 30% 30%, rgba(40, 47, 107, 0.7) 0%, rgba(12, 14, 43, 0.95) 100%);
-            border: 2px solid rgba(255, 255, 255, 0.15);
+            max-width: 82px;
+            background: radial-gradient(circle at 30% 30%, #202557 0%, #0a0b22 100%);
+            border: 1.5px solid rgba(255, 255, 255, 0.12);
             border-radius: 50%;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             cursor: pointer;
-            position: relative;
-            box-shadow: 0 8px 15px rgba(0,0,0,0.4);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.2);
+            box-shadow: 0 5px 10px rgba(0,0,0,0.3);
+            transition: transform 0.2s;
             z-index: 2;
         }
 
-        .feature-bubble:hover {
-            transform: translateY(-5px) scale(1.05);
+        .feature-bubble:active, .feature-bubble.active {
+            transform: scale(0.92);
             border-color: #ffd700;
-            box-shadow: 0 12px 25px rgba(138, 43, 226, 0.5);
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
         }
 
-        .feature-bubble.active {
-            border-color: #ffd700;
-            box-shadow: 0 0 25px rgba(255, 215, 0, 0.5);
-            transform: scale(0.95);
-        }
+        .feature-bubble i { font-size: 1.25rem; color: #ffd700; margin-bottom: 2px; }
+        .feature-bubble span { color: #ffffff; font-size: 0.78rem; font-weight: 700; }
 
-        .feature-bubble i { font-size: 1.4rem; color: #ffd700; margin-bottom: 4px; }
-        .feature-bubble span { color: #ffffff; font-size: 0.8rem; font-weight: 700; }
-
-        /* حاوية الانبثاق المتطايرة العلوية */
+        /* حاوية الأغصان والفقاعات المنبثقة الذكية والمتحاذية تماماً */
         .popout-container {
             position: absolute;
-            top: -125px;
+            top: -105px;
             left: 0;
             width: 100%;
-            height: 120px;
+            height: 100px;
             pointer-events: none;
             z-index: 3;
         }
 
+        /* تصميم الفقاعات المنسابة شجرياً كالصورة تماماً وبأقصى خفة */
         .sub-bubble {
             position: absolute;
-            background: radial-gradient(circle at 30% 30%, rgba(147, 112, 219, 0.95) 0%, rgba(25, 20, 70, 0.98) 100%);
+            background: radial-gradient(circle at 30% 30%, #583bb6 0%, #151140 100%);
             border: 1.5px solid #ffd700;
             color: #fff;
-            border-radius: 50px;
-            padding: 7px 15px;
-            font-size: 0.75rem;
+            border-radius: 30px;
+            padding: 5px 12px;
+            font-size: 0.72rem;
             font-weight: 700;
             display: flex;
             align-items: center;
-            gap: 6px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.6), 0 0 15px rgba(147, 112, 219, 0.4);
+            gap: 5px;
+            box-shadow: 0 5px 12px rgba(0,0,0,0.5);
             pointer-events: auto;
             opacity: 0;
-            transform: scale(0) translateY(40px);
-            animation: bubblePop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.25) forwards;
+            transform: scale(0) translateY(30px);
+            animation: bubblePop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.2) forwards;
         }
 
         @keyframes bubblePop {
@@ -385,18 +330,18 @@
         }
 
         @keyframes bubbleFadeOut {
-            to { opacity: 0; transform: scale(0) translateY(-20px); }
+            to { opacity: 0; transform: scale(0) translateY(-15px); }
         }
 
         .customer-footer {
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            padding-top: 15px;
-            color: #8c92bd;
-            font-size: 0.9rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            padding-top: 12px;
+            color: #8388b4;
+            font-size: 0.85rem;
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 6px;
+            gap: 5px;
         }
 
         .customer-footer span { color: #ffd700; font-weight: 900; }
@@ -404,22 +349,25 @@
 </head>
 <body>
 
-    <div class="space-bg" id="spaceBg"></div>
+    <div class="space-bg"></div>
+    <div class="stars"></div>
 
-    <div class="phone-wrapper" id="mainWrapper">
+    <div class="phone-wrapper">
         
+        <!-- اللوجو الفضائي البصري الخفيف -->
         <div class="logo-container">
             <div class="logo-ring"></div>
             <div class="logo-circle" id="logoCircle">
-                <i class="fa-solid fa-wifi" style="color: #00ffff; font-size: 1.1rem; position: absolute; top: 12px; filter: drop-shadow(0 0 5px #00ffff);"></i>
+                <i class="fa-solid fa-wifi" style="color: #00ffff; font-size: 1rem; position: absolute; top: 10px; filter: drop-shadow(0 0 4px #00ffff);"></i>
                 <img src="https://img.icons8.com/neon/96/unicorn.png" alt="Buraq Space">
                 <div class="brand-name">buraq</div>
             </div>
         </div>
 
-        <h1 id="mainTitle">براق الفضاء للإنترنت اللاسلكي</h1>
-        <p class="subtitle" id="mainSub">أهلاً بك في شبكتنا</p>
+        <h1>براق الفضاء للإنترنت اللاسلكي</h1>
+        <p class="subtitle">أهلاً بك في شبكتنا</p>
 
+        <!-- نافذة الدخول المتوافقة كلياً مع الميكروتك (صيغة خفيفة وسريعة) -->
         <div id="loginPane" class="window-pane">
             <form class="login-card" onsubmit="handleLogin(event)">
                 <div class="input-wrapper">
@@ -439,28 +387,30 @@
             </form>
         </div>
 
+        <!-- شاشة النجاح الفورية والخفيفة المظهر للكرت النشط -->
         <div id="successPane" class="window-pane hide">
             <div class="success-card">
                 <div class="success-icon-glow">
                     <i class="fa-solid fa-check"></i>
                 </div>
-                <h2 class="success-title">تم تفعيل الحساب بنجاح</h2>
+                <div class="success-title">تم تفعيل الكرت بنجاح</div>
                 
                 <div class="info-row">
-                    <div class="info-label"><i class="fa-solid fa-gauge-high"></i> سرعة التحميل</div>
-                    <div class="info-value highlight">50 ميجابت/ث</div>
+                    <div class="info-label"><i class="fa-solid fa-gauge-high"></i> سرعة الحساب</div>
+                    <div class="info-value highlight">مفتوحة السرعة</div>
                 </div>
                 <div class="info-row">
-                    <div class="info-label"><i class="fa-solid fa-database"></i> الرصيد المتبقي</div>
-                    <div class="info-value highlight">∞ مفتوح</div>
+                    <div class="info-label"><i class="fa-solid fa-database"></i> رصيد التحميل</div>
+                    <div class="info-value highlight">غير محدود</div>
                 </div>
                 <div class="info-row">
-                    <div class="info-label"><i class="fa-solid fa-calendar-days"></i> انتهاء الصلاحية</div>
-                    <div class="info-value">غير محدود</div>
+                    <div class="info-label"><i class="fa-solid fa-calendar-days"></i> صلاحية الكرت</div>
+                    <div class="info-value">حتى نفاذ الاشتراك</div>
                 </div>
             </div>
         </div>
 
+        <!-- شجرة الفقاعات المنبثقة التفاعلية الذكية -->
         <div class="features-row">
             <div class="popout-container" id="bubbleContainer"></div>
             
@@ -488,36 +438,24 @@
     </div>
 
     <script>
-        // توليد نجوم الخلفية الفضائية المتحركة بشكل عشوائي عند التحميل لعدم ثقل الكود
-        const bg = document.getElementById('spaceBg');
-        for (let i = 0; i < 40; i++) {
-            const star = document.createElement('div');
-            star.className = 'star';
-            star.style.width = star.style.height = Math.random() * 3 + 1 + 'px';
-            star.style.left = Math.random() * 100 + 'vw';
-            star.style.top = Math.random() * 100 + 'vh';
-            star.style.animationDelay = Math.random() * 15 + 's';
-            bg.appendChild(star);
-        }
-
-        // داتا الانبثاق للأزرار الثلاثة
+        // داتا معلومات شجرة الفقاعات المنبثقة الموزعة بذكاء هندسي
         const dataBubbles = {
             branches: [
-                { text: 'فرع بغداد', icon: 'fa-location-dot', top: '15px', right: '15%' },
-                { text: 'فرع البصرة', icon: 'fa-location-dot', top: '65px', right: '5%' },
+                { text: 'فرع بغداد', icon: 'fa-location-dot', top: '15px', right: '12%' },
+                { text: 'فرع البصرة', icon: 'fa-location-dot', top: '60px', right: '2%' },
                 { text: 'فرع النجف', icon: 'fa-location-dot', top: '10px', left: '35%' },
-                { text: 'فرع أربيل', icon: 'fa-location-dot', top: '55px', left: '10%' }
+                { text: 'فرع أربيل', icon: 'fa-location-dot', top: '55px', left: '8%' }
             ],
             points: [
-                { text: 'كشك المطار', icon: 'fa-shop', top: '20px', right: '20%' },
-                { text: 'مكتبة الفجر', icon: 'fa-book', top: '70px', right: '40%' },
-                { text: 'سوبرماركت 105', icon: 'fa-basket-shopping', top: '10px', left: '25%' },
-                { text: 'مكتبة الغدير', icon: 'fa-book', top: '65px', left: '10%' }
+                { text: 'كشك المطار', icon: 'fa-shop', top: '15px', right: '18%' },
+                { text: 'مكتبة الفجر', icon: 'fa-book', top: '62px', right: '35%' },
+                { text: 'سوبر ماركت', icon: 'fa-basket-shopping', top: '10px', left: '28%' },
+                { text: 'مكتبة الغدير', icon: 'fa-book', top: '58px', left: '5%' }
             ],
             prices: [
-                { text: '5$ | 7 أيام', icon: 'fa-bolt', top: '15px', right: '25%' },
-                { text: '10$ | 30 يوم', icon: 'fa-star', top: '60px', right: '15%' },
-                { text: '20$ | VIP مفتوح', icon: 'fa-crown', top: '35px', left: '15%' }
+                { text: '5$ | 7 أيام', icon: 'fa-bolt', top: '15px', right: '20%' },
+                { text: '10$ | 30 يوم', icon: 'fa-star', top: '55px', right: '10%' },
+                { text: '20$ | VIP', icon: 'fa-crown', top: '30px', left: '15%' }
             ]
         };
 
@@ -546,43 +484,36 @@
                     if(item.left) bubble.style.left = item.left;
                     if(item.right) bubble.style.right = item.right;
                     container.appendChild(bubble);
-                }, index * 60);
+                }, index * 50); // أنيميشن تتابعي سريع وخفيف جداً لسرعة استجابة الموبايل
             });
         }
 
         function clearBubbles() {
             const container = document.getElementById('bubbleContainer');
             container.querySelectorAll('.sub-bubble').forEach(b => {
-                b.style.animation = 'bubbleFadeOut 0.25s ease forwards';
-                setTimeout(() => b.remove(), 250);
+                b.style.animation = 'bubbleFadeOut 0.2s ease forwards';
+                setTimeout(() => b.remove(), 200);
             });
         }
 
-        // دالة التعامل السلس مع محاكي تسجيل الدخول الناجح والتحول لشاشة الكرت النشط
         function handleLogin(event) {
-            event.preventDefault(); // منع إعادة تحميل الصفحة فوراً لرؤية الأنيميشن
-            
+            event.preventDefault();
             const loginPane = document.getElementById('loginPane');
             const successPane = document.getElementById('successPane');
             const logoCircle = document.getElementById('logoCircle');
             
-            // 1. إخفاء صندوق تسجيل الدخول بأنيميشن تدرجي ناعم
             loginPane.classList.add('hide');
             
             setTimeout(() => {
-                // 2. تعديل هالة اللوجو لتتحول للأخضر النيوني (دلالة على الاتصال بنجاح)
-                logoCircle.style.boxShadow = '0 0 40px #00ffc8, inset 0 0 20px rgba(0, 255, 200, 0.3)';
+                logoCircle.style.boxShadow = '0 0 30px #00ffc8, inset 0 0 15px rgba(0, 255, 200, 0.3)';
                 logoCircle.style.borderColor = '#00ffc8';
                 
-                // 3. إظهار شاشة نجاح الحساب وتفاصيل الرصيد والإنترنت النشط
                 successPane.classList.remove('hide');
-                successPane.classList.add('show');
                 
-                // إغلاق أي فقاعات فروع أو أسعار مفتوحة لتنسيق الصفحة
                 clearBubbles();
                 document.querySelectorAll('.feature-bubble').forEach(b => b.classList.remove('active'));
                 currentActiveType = null;
-            }, 400);
+            }, 300);
         }
     </script>
 </body>
