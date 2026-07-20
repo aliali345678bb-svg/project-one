@@ -3,518 +3,84 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>براق الفضاء للإنترنت اللاسلكي</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>موقعي التفاعلي</title>
     
     <style>
         * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-            font-family: 'Cairo', sans-serif;
-            -webkit-tap-highlight-color: transparent;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         body {
-            background: #03030d;
+            background-color: #f4f7f6;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 10px;
-            overflow: hidden;
-            position: relative;
         }
 
-        /* خلفية الفضاء باستخدام تدرج ألوان فخم فائق الخفة (بدون صور) */
-        .space-bg {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle at 50% 25%, #120f30 0%, #03030d 80%);
-            z-index: 0;
-        }
-
-        /* تأثير النجوم النيون الخفيفة باستعمال CSS لضمان عدم استهلاك البطارية أو المعالج */
-        .stars {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background-image: 
-                radial-gradient(white, rgba(255,255,255,.2) 1px, transparent 20px),
-                radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 30px);
-            background-size: 250px 250px, 150px 150px;
-            background-position: 0 0, 40px 60px;
-            opacity: 0.25;
-            z-index: 0;
-        }
-
-        /* حاوية الهاتف المحمولة فائقة الاستجابة والنعومة */
-        .phone-wrapper {
-            width: 100%;
-            max-width: 390px;
-            background: linear-gradient(180deg, rgba(20, 22, 54, 0.8) 0%, rgba(8, 9, 24, 0.98) 100%);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1.5px solid rgba(255, 215, 0, 0.2);
-            border-radius: 35px;
-            padding: 25px 18px;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 30px rgba(106, 90, 205, 0.2);
-            z-index: 1;
-            position: relative;
+        .container {
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
             text-align: center;
-        }
-
-        /* اللوجو الدائري المشع والمبسط */
-        .logo-container {
-            position: relative;
-            width: 120px;
-            height: 120px;
-            margin: 0 auto 15px auto;
-        }
-
-        .logo-circle {
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle, #0e1132 0%, #171a47 100%);
-            border: 2px solid rgba(255, 215, 0, 0.4);
-            border-radius: 50%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            box-shadow: 0 0 25px rgba(138, 43, 226, 0.6);
-            transition: all 0.4s ease;
-        }
-
-        .logo-ring {
-            position: absolute;
-            top: 50%; left: 50%;
-            width: 138px;
-            height: 46px;
-            border: 2px solid rgba(255, 215, 0, 0.5);
-            border-radius: 50%;
-            transform: translate(-50%, -50%) rotate(-15deg);
-            box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
-            pointer-events: none;
-        }
-
-        .logo-circle img {
-            width: 55px;
-            height: 55px;
-            filter: drop-shadow(0 0 8px rgba(0, 255, 255, 0.8));
-        }
-
-        .logo-circle .brand-name {
-            font-size: 1rem;
-            font-weight: 900;
-            color: #ffffff;
-            text-shadow: 0 0 5px rgba(255, 215, 0, 0.8);
-            margin-top: -2px;
+            max-width: 400px;
+            width: 90%;
         }
 
         h1 {
-            color: #ffffff;
-            font-size: 1.35rem;
-            font-weight: 700;
-            margin-bottom: 4px;
-        }
-
-        .subtitle {
-            color: #9296be;
-            font-size: 0.88rem;
-            margin-bottom: 20px;
-        }
-
-        /* لوحات العرض المانعة للتأخير */
-        .window-pane {
-            transition: opacity 0.3s ease, transform 0.3s ease;
-        }
-
-        .window-pane.hide {
-            opacity: 0;
-            transform: scale(0.95) translateY(-10px);
-            display: none !important;
-        }
-
-        /* كارد تسجيل الدخول البيضاوي */
-        .login-card {
-            background: rgba(10, 11, 32, 0.5);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 22px;
-            padding: 20px 15px;
-            margin-bottom: 20px;
-        }
-
-        .input-wrapper {
-            position: relative;
-            margin-bottom: 12px;
-        }
-
-        .input-wrapper input {
-            width: 100%;
-            padding: 13px 20px 13px 45px;
-            background: #060718;
-            border: 1.5px solid rgba(212, 175, 55, 0.4);
-            border-radius: 50px;
-            color: #ffffff;
-            font-size: 0.9rem;
-            outline: none;
-            text-align: right;
-            transition: all 0.25s ease;
-        }
-
-        .input-wrapper input:focus {
-            border-color: #ffd700;
-            box-shadow: 0 0 12px rgba(255, 215, 0, 0.3);
-        }
-
-        .input-wrapper i {
-            position: absolute;
-            left: 18px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #ffd700;
-            font-size: 1rem;
-        }
-
-        .login-btn {
-            width: 100%;
-            padding: 13px;
-            background: linear-gradient(45deg, #aa7c11, #f3e5ab, #aa7c11);
-            border: none;
-            border-radius: 50px;
-            color: #03030d;
-            font-size: 1.05rem;
-            font-weight: 900;
-            cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 8px;
-            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-
-        .login-btn:active {
-            transform: scale(0.98);
-        }
-
-        /* شاشة نجاح الاتصال فائقة الأناقة (تطابق الهوية الفضائية) */
-        .success-card {
-            background: rgba(10, 12, 36, 0.6);
-            border: 1.5px solid rgba(0, 255, 200, 0.3);
-            border-radius: 22px;
-            padding: 20px 15px;
-            margin-bottom: 20px;
-            animation: fadeIn 0.4s ease forwards;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.95); }
-            to { opacity: 1; transform: scale(1); }
-        }
-
-        .success-icon-glow {
-            width: 55px;
-            height: 55px;
-            background: #00ffc8;
-            border-radius: 50%;
-            margin: 0 auto 12px auto;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            box-shadow: 0 0 15px #00ffc8;
-        }
-
-        .success-icon-glow i {
-            color: #03030d;
-            font-size: 1.5rem;
-        }
-
-        .success-title {
-            color: #00ffc8;
-            font-size: 1.2rem;
-            font-weight: 800;
-            margin-bottom: 12px;
-        }
-
-        .info-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 8px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        }
-        .info-row:last-child { border: none; }
-
-        .info-label {
-            color: #8388b4;
-            font-size: 0.88rem;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .info-label i { color: #00ffc8; }
-        .info-value { color: #ffffff; font-weight: 700; font-size: 0.88rem; }
-        .info-value.highlight { color: #00ffc8; }
-
-        /* منطقة الأزرار الدائرية التفاعلية */
-        .features-row {
-            display: flex;
-            justify-content: space-around;
-            gap: 8px;
+            color: #2c3e50;
             margin-bottom: 15px;
-            position: relative;
         }
 
-        .feature-bubble {
-            flex: 1;
-            aspect-ratio: 1 / 1;
-            max-width: 82px;
-            background: radial-gradient(circle at 30% 30%, #202557 0%, #0a0b22 100%);
-            border: 1.5px solid rgba(255, 255, 255, 0.12);
-            border-radius: 50%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
+        p {
+            color: #7f8c8d;
+            margin-bottom: 25px;
+        }
+
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            border-radius: 6px;
             cursor: pointer;
-            box-shadow: 0 5px 10px rgba(0,0,0,0.3);
-            transition: transform 0.2s;
-            z-index: 2;
+            transition: background-color 0.3s ease;
         }
 
-        .feature-bubble:active, .feature-bubble.active {
-            transform: scale(0.92);
-            border-color: #ffd700;
-            box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+        button:hover {
+            background-color: #2980b9;
         }
 
-        .feature-bubble i { font-size: 1.25rem; color: #ffd700; margin-bottom: 2px; }
-        .feature-bubble span { color: #ffffff; font-size: 0.78rem; font-weight: 700; }
-
-        /* حاوية الأغصان والفقاعات المنبثقة الذكية والمتحاذية تماماً */
-        .popout-container {
-            position: absolute;
-            top: -105px;
-            left: 0;
-            width: 100%;
-            height: 100px;
-            pointer-events: none;
-            z-index: 3;
+        #message {
+            margin-top: 20px;
+            font-weight: bold;
+            color: #27ae60;
         }
-
-        /* تصميم الفقاعات المنسابة شجرياً كالصورة تماماً وبأقصى خفة */
-        .sub-bubble {
-            position: absolute;
-            background: radial-gradient(circle at 30% 30%, #583bb6 0%, #151140 100%);
-            border: 1.5px solid #ffd700;
-            color: #fff;
-            border-radius: 30px;
-            padding: 5px 12px;
-            font-size: 0.72rem;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            box-shadow: 0 5px 12px rgba(0,0,0,0.5);
-            pointer-events: auto;
-            opacity: 0;
-            transform: scale(0) translateY(30px);
-            animation: bubblePop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.2) forwards;
-        }
-
-        @keyframes bubblePop {
-            to { opacity: 1; transform: scale(1) translateY(0); }
-        }
-
-        @keyframes bubbleFadeOut {
-            to { opacity: 0; transform: scale(0) translateY(-15px); }
-        }
-
-        .customer-footer {
-            border-top: 1px solid rgba(255, 255, 255, 0.08);
-            padding-top: 12px;
-            color: #8388b4;
-            font-size: 0.85rem;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .customer-footer span { color: #ffd700; font-weight: 900; }
     </style>
 </head>
 <body>
 
-    <div class="space-bg"></div>
-    <div class="stars"></div>
-
-    <div class="phone-wrapper">
-        
-        <!-- اللوجو الفضائي البصري الخفيف -->
-        <div class="logo-container">
-            <div class="logo-ring"></div>
-            <div class="logo-circle" id="logoCircle">
-                <i class="fa-solid fa-wifi" style="color: #00ffff; font-size: 1rem; position: absolute; top: 10px; filter: drop-shadow(0 0 4px #00ffff);"></i>
-                <img src="https://img.icons8.com/neon/96/unicorn.png" alt="Buraq Space">
-                <div class="brand-name">buraq</div>
-            </div>
-        </div>
-
-        <h1>براق الفضاء للإنترنت اللاسلكي</h1>
-        <p class="subtitle">أهلاً بك في شبكتنا</p>
-
-        <!-- نافذة الدخول المتوافقة كلياً مع الميكروتك (صيغة خفيفة وسريعة) -->
-        <div id="loginPane" class="window-pane">
-            <form class="login-card" onsubmit="handleLogin(event)">
-                <div class="input-wrapper">
-                    <input type="text" id="username" placeholder="أدخل رقم الكرت / اسم المستخدم" required autocomplete="off">
-                    <i class="fa-solid fa-user"></i>
-                </div>
-
-                <div class="input-wrapper">
-                    <input type="password" id="password" placeholder="أدخل كلمة المرور (إن وجدت)">
-                    <i class="fa-solid fa-lock"></i>
-                </div>
-
-                <button type="submit" class="login-btn">
-                    <span>الاتصال بالشبكة</span>
-                    <i class="fa-solid fa-bolt"></i>
-                </button>
-            </form>
-        </div>
-
-        <!-- شاشة النجاح الفورية والخفيفة المظهر للكرت النشط -->
-        <div id="successPane" class="window-pane hide">
-            <div class="success-card">
-                <div class="success-icon-glow">
-                    <i class="fa-solid fa-check"></i>
-                </div>
-                <div class="success-title">تم تفعيل الكرت بنجاح</div>
-                
-                <div class="info-row">
-                    <div class="info-label"><i class="fa-solid fa-gauge-high"></i> سرعة الحساب</div>
-                    <div class="info-value highlight">مفتوحة السرعة</div>
-                </div>
-                <div class="info-row">
-                    <div class="info-label"><i class="fa-solid fa-database"></i> رصيد التحميل</div>
-                    <div class="info-value highlight">غير محدود</div>
-                </div>
-                <div class="info-row">
-                    <div class="info-label"><i class="fa-solid fa-calendar-days"></i> صلاحية الكرت</div>
-                    <div class="info-value">حتى نفاذ الاشتراك</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- شجرة الفقاعات المنبثقة التفاعلية الذكية -->
-        <div class="features-row">
-            <div class="popout-container" id="bubbleContainer"></div>
-            
-            <div class="feature-bubble" onclick="showSubBubbles('prices', this)">
-                <i class="fa-solid fa-tag"></i>
-                <span>الأسعار</span>
-            </div>
-
-            <div class="feature-bubble" onclick="showSubBubbles('points', this)">
-                <i class="fa-solid fa-cart-shopping"></i>
-                <span>نقاط البيع</span>
-            </div>
-
-            <div class="feature-bubble" onclick="showSubBubbles('branches', this)">
-                <i class="fa-solid fa-location-dot"></i>
-                <span>الفروع</span>
-            </div>
-        </div>
-
-        <div class="customer-footer">
-            <i class="fa-solid fa-headset" style="color: #ffd700;"></i>
-            خدمة العملاء: <span>10000000</span>
-        </div>
-
+    <div class="container">
+        <h1>مرحباً بك!</h1>
+        <p>هذا موقع بسيط يجمع بين HTML و CSS و JavaScript في ملف واحد.</p>
+        <button id="btn">اضغط هنا</button>
+        <p id="message"></p>
     </div>
 
     <script>
-        // داتا معلومات شجرة الفقاعات المنبثقة الموزعة بذكاء هندسي
-        const dataBubbles = {
-            branches: [
-                { text: 'فرع بغداد', icon: 'fa-location-dot', top: '15px', right: '12%' },
-                { text: 'فرع البصرة', icon: 'fa-location-dot', top: '60px', right: '2%' },
-                { text: 'فرع النجف', icon: 'fa-location-dot', top: '10px', left: '35%' },
-                { text: 'فرع أربيل', icon: 'fa-location-dot', top: '55px', left: '8%' }
-            ],
-            points: [
-                { text: 'كشك المطار', icon: 'fa-shop', top: '15px', right: '18%' },
-                { text: 'مكتبة الفجر', icon: 'fa-book', top: '62px', right: '35%' },
-                { text: 'سوبر ماركت', icon: 'fa-basket-shopping', top: '10px', left: '28%' },
-                { text: 'مكتبة الغدير', icon: 'fa-book', top: '58px', left: '5%' }
-            ],
-            prices: [
-                { text: '5$ | 7 أيام', icon: 'fa-bolt', top: '15px', right: '20%' },
-                { text: '10$ | 30 يوم', icon: 'fa-star', top: '55px', right: '10%' },
-                { text: '20$ | VIP', icon: 'fa-crown', top: '30px', left: '15%' }
-            ]
-        };
+        const button = document.getElementById('btn');
+        const message = document.getElementById('message');
 
-        let currentActiveType = null;
-
-        function showSubBubbles(type, element) {
-            const container = document.getElementById('bubbleContainer');
-            document.querySelectorAll('.feature-bubble').forEach(b => b.classList.remove('active'));
-            
-            if (currentActiveType === type) {
-                clearBubbles();
-                currentActiveType = null;
-                return;
-            }
-
-            element.classList.add('active');
-            currentActiveType = type;
-            clearBubbles();
-
-            dataBubbles[type].forEach((item, index) => {
-                setTimeout(() => {
-                    const bubble = document.createElement('div');
-                    bubble.className = 'sub-bubble';
-                    bubble.innerHTML = `<i class="fa-solid ${item.icon}"></i> ${item.text}`;
-                    if(item.top) bubble.style.top = item.top;
-                    if(item.left) bubble.style.left = item.left;
-                    if(item.right) bubble.style.right = item.right;
-                    container.appendChild(bubble);
-                }, index * 50); // أنيميشن تتابعي سريع وخفيف جداً لسرعة استجابة الموبايل
-            });
-        }
-
-        function clearBubbles() {
-            const container = document.getElementById('bubbleContainer');
-            container.querySelectorAll('.sub-bubble').forEach(b => {
-                b.style.animation = 'bubbleFadeOut 0.2s ease forwards';
-                setTimeout(() => b.remove(), 200);
-            });
-        }
-
-        function handleLogin(event) {
-            event.preventDefault();
-            const loginPane = document.getElementById('loginPane');
-            const successPane = document.getElementById('successPane');
-            const logoCircle = document.getElementById('logoCircle');
-            
-            loginPane.classList.add('hide');
-            
-            setTimeout(() => {
-                logoCircle.style.boxShadow = '0 0 30px #00ffc8, inset 0 0 15px rgba(0, 255, 200, 0.3)';
-                logoCircle.style.borderColor = '#00ffc8';
-                
-                successPane.classList.remove('hide');
-                
-                clearBubbles();
-                document.querySelectorAll('.feature-bubble').forEach(b => b.classList.remove('active'));
-                currentActiveType = null;
-            }, 300);
-        }
+        button.addEventListener('click', () => {
+            message.textContent = 'تم الضغط على الزر بنجاح! 🚀';
+        });
     </script>
+
 </body>
 </html>
